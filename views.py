@@ -3,7 +3,7 @@ from my_wsgi.templator import render
 
 class Index:
     def __call__(self, request):
-        return '200 OK', render('index.html')
+        return '200 OK', render('index.html', style=request.get('style', None))
 
 
 class About:
@@ -13,12 +13,12 @@ class About:
 
 class Calc:
     def __call__(self, request):
-        return '200 Ok', render('calc.html', data=request.get('data', None))
+        return '200 Ok', render('calc.html', data=request.get('data', None), style=request.get('style', None))
 
 
 class AddProduct:
     def __call__(self, request):
-        return '200 Ok', render('add_product.html')
+        return '200 Ok', render('add_product.html', style=request.get('style', None))
 
 
 class NotFoundPage:

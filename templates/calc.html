@@ -16,103 +16,7 @@
         input[type=number]:focus {
             border: 3px solid #555;
         }
-
-        .menu {
-            list-style-type: none;
-            padding-left: 0;
-            margin-left: 0;
-            overflow: hidden;
-        }
-        .menu a {
-            text-decoration: none;
-            font-family: sans-serif;
-            color: grey;
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: lavender;
-            border-bottom: 5px solid gray;
-        }
-        .menu li {
-            float: left;
-        }
-
-        .table{
-            border: 1px solid #eee;
-            table-layout: fixed;
-            width: 100%;
-            margin-bottom: 20px;
-        }
-
-        .table th {
-            font-weight: bold;
-            padding: 5px;
-            background: white;
-            border: 1px solid #dddddd;
-        }
-        .table td{
-            padding: 5px 10px;
-            border: 1px solid #eee;
-            text-align: left;
-        }
-
-        .table caption {
-          padding: 10px;
-          color: white;
-          font-size: 18px;
-          text-align: left;
-          font-weight: bold;
-        }
-        .table_products caption {
-            background: #9966ff;
-        }
-        .table_products tbody tr:nth-child(odd){
-            background: #fff;
-        }
-        .table_products tbody tr:nth-child(even){
-            background: lavender;
-        }
-        .table_results caption {
-            background: #6E7B8B;
-        }
-        .table_results tbody tr:nth-child(odd){
-            background: #fff;
-        }
-        .table_results tbody tr:nth-child(even){
-            background: #DCDCDC;
-        }
-        .table_res{
-            font-weight: bold;
-            color: white;
-            background: #6E7B8B;
-        }
-        a.button{
-            display: inline-block;
-            padding: 12px;
-            border-radius: 3px;
-            text-decoration: none;
-            font-size: 18px;
-            line-height: 1;
-            font-weight: 100;
-        }
-        .button_violet{
-            background: #9966ff;
-            color: #fff;
-        }
-
-        div {
-          margin: 24px;
-          text-align: center;
-        }
-        .button_calc{
-            display: inline-block;
-            padding: 12px;
-            border-radius: 3px;
-            text-decoration: none;
-            font-size: 18px;
-            line-height: 1;
-            width: 100%;
-            font-weight: bold;
-        }
+     {{style}}
     </style>
     <meta charset="UTF-8">
     <title>Калькулятор</title>
@@ -197,7 +101,7 @@
     </div>
     <form>
         <table class="table table_results">
-        <caption>Результаты расчета на {{data}} : </caption>
+        <caption>Результаты расчета на {{data}}: </caption>
             <tr class="head">
             <th>Наименование продукта</th>
             <th>Калории Ккал</th>

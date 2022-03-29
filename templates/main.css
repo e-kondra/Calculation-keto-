@@ -1,3 +1,4 @@
+
 .menu {
     list-style-type: none;
     padding-left: 0;
@@ -15,13 +16,16 @@
 }
 .menu li {
     float: left;
+    list-style-type: none;
 }
+
 .table{
     border: 1px solid #eee;
     table-layout: fixed;
     width: 100%;
     margin-bottom: 20px;
-    }
+}
+
 .table th {
     font-weight: bold;
     padding: 5px;
@@ -33,6 +37,7 @@
     border: 1px solid #eee;
     text-align: left;
 }
+
 .table caption {
   padding: 10px;
   color: white;
@@ -50,16 +55,43 @@
     background: lavender;
 }
 .table_results caption {
-    background: #6666cc;
+    background: #6E7B8B;
 }
 .table_results tbody tr:nth-child(odd){
     background: #fff;
 }
 .table_results tbody tr:nth-child(even){
-    background: #99ccff;
+    background: #DCDCDC;
 }
-.res{
+.table_res{
     font-weight: bold;
-    color: black;
-    background: #6666cc;
+    color: white;
+    background: #6E7B8B;
+}
+a.button{
+    display: inline-block;
+    padding: 12px;
+    border-radius: 3px;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 1;
+    font-weight: 100;
+}
+.button_violet{
+    background: #9966ff;
+    color: #fff;
+}
+div {
+  margin: 24px;
+  text-align: center;
+}
+.button_calc{
+    display: inline-block;
+    padding: 12px;
+    border-radius: 3px;
+    text-decoration: none;
+    font-size: 18px;
+    line-height: 1;
+    width: 100%;
+    font-weight: bold;
 }
