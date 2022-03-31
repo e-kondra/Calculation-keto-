@@ -1,12 +1,13 @@
 from datetime import date
 
-from views import Index, About, Calc, AddProduct
+from views import Index, About, Calc, AddProduct, ContactUs
 
 routes = {
     '/': Index(),
     '/about/': About(),
     '/calc/': Calc(),
     '/add_product/': AddProduct(),
+    '/contact_us/': ContactUs(),
 }
 
 
@@ -23,6 +24,11 @@ def style_front(request):
         text_css = f.read()
     request['style'] = text_css
 
-fronts = [secret_front, other_front, style_front]
+def style_cont(request):
+    with open('templates/contact_us.css', 'r', encoding='utf-8') as f:
+        text_css = f.read()
+    request['style_cont'] = text_css
+
+fronts = [secret_front, other_front, style_front, style_cont]
 
 

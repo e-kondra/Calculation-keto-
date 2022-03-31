@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <style type="text/css">
-        input[type=number] {
+        .calc_input input[type=number] {
             width: 10%;
             padding: 12px 20px;
             margin: 8px 0;
@@ -13,7 +13,7 @@
             outline: none;
         }
 
-        input[type=number]:focus {
+        .calc_input input[type=number]:focus {
             border: 3px solid #555;
         }
      {{style}}
@@ -27,78 +27,79 @@
             <li><a href='/'>На главную</a></li>
             <li><a href="/calc/">Калькулятор</a></li>
             <li><a href="/about/">О проекте</a></li>
+            <li><a href="/contact_us/">Обратная связь</a></li>
         </ul>
     </div>
-    <form>
-        <label for="kkal">Количество калорий</label>
-        <input type="number" name="kkal" value="2100">
-    </form>
-    <form>
-        <label>Укажите необходимое соотношение в %: </label>
-        <label for="balt">Белки: </label>
-        <input type="number" name="balt" value="25">
-        <label for="fat">Жиры: </label>
-        <input type="number" name="fat" value="70">
-        <label for="ugl">Углеводы: </label>
-        <input type="number" name="ugl" value="5">
-    </form>
-    <form>
+    <form action="" method="post">
+        <div class="calc_input">
+            <label for="kkal">Количество калорий</label>
+            <input type="number" name="kkal" value="2100" id="kkal">
+        </div>
+        <div class="calc_input">
+            <label>Укажите необходимое соотношение в %: </label>
+            <label for="balt">Белки: </label>
+            <input type="number" name="balt" value="25" id="balt">
+            <label for="fat">Жиры: </label>
+            <input type="number" name="fat" value="70" id="fat">
+            <label for="ugl">Углеводы: </label>
+            <input type="number" name="ugl" value="5" id="ugl">
+        </div>
         <table class="table table_products">
-        <caption>Продукты для расчета:</caption>
-        <tr class="head">
-            <th>Наименование продукта</th>
-            <th>Калории на 100гр/Ккал</th>
-            <th>Белки на 100гр/Гр</th>
-            <th>Жиры на 100гр/Гр</th>
-            <th>Углеводы на 100гр/Гр</th>
-            <th></th>
-        </tr>
-        <tr>
-            <td>Лосось на гриле</td>
-            <td>283</td>
-            <td>20.7</td>
-            <td>22.3</td>
-            <td>0.6</td>
-            <td><input type="button" value="Удалить"></td>
-        </tr>
-        <tr>
-            <td>Творог 11%</td>
-            <td>170</td>
-            <td>16.0</td>
-            <td>11.0</td>
-            <td>1.0</td>
-            <td><input type="button" value="Удалить"></td>
-        </tr>
-        <tr>
-            <td>Сыр Маасдам</td>
-            <td>350</td>
-            <td>23.5</td>
-            <td>26.0</td>
-            <td>0.0</td>
-            <td><input type="button" value="Удалить"></td>
-        </tr>
-        <tr>
-            <td>Яйцо куриное вареное</td>
-            <td>160</td>
-            <td>12.9</td>
-            <td>11.6</td>
-            <td>0.8</td>
-            <td><input type="button" value="Удалить"></td>
-        </tr>
-        <tr>
-            <td>Базилик свежий</td>
-            <td>23</td>
-            <td>3.15</td>
-            <td>0.64</td>
-            <td>1.05</td>
-            <td><input type="button" value="Удалить"></td>
-        </tr>
-    </table>
+            <caption>Продукты для расчета:</caption>
+            <tr class="head">
+                <th>Наименование продукта</th>
+                <th>Калории на 100гр/Ккал</th>
+                <th>Белки на 100гр/Гр</th>
+                <th>Жиры на 100гр/Гр</th>
+                <th>Углеводы на 100гр/Гр</th>
+                <th></th>
+            </tr>
+            <tr>
+                <td>Лосось на гриле</td>
+                <td>283</td>
+                <td>20.7</td>
+                <td>22.3</td>
+                <td>0.6</td>
+                <td><input type="button" value="Удалить"></td>
+            </tr>
+            <tr>
+                <td>Творог 11%</td>
+                <td>170</td>
+                <td>16.0</td>
+                <td>11.0</td>
+                <td>1.0</td>
+                <td><input type="button" value="Удалить"></td>
+            </tr>
+            <tr>
+                <td>Сыр Маасдам</td>
+                <td>350</td>
+                <td>23.5</td>
+                <td>26.0</td>
+                <td>0.0</td>
+                <td><input type="button" value="Удалить"></td>
+            </tr>
+            <tr>
+                <td>Яйцо куриное вареное</td>
+                <td>160</td>
+                <td>12.9</td>
+                <td>11.6</td>
+                <td>0.8</td>
+                <td><input type="button" value="Удалить"></td>
+            </tr>
+            <tr>
+                <td>Базилик свежий</td>
+                <td>23</td>
+                <td>3.15</td>
+                <td>0.64</td>
+                <td>1.05</td>
+                <td><input type="button" value="Удалить"></td>
+            </tr>
+        </table>
         <a class="button button_violet" href="/add_product/">Добавить продукт в расчет</a>
+        <div>
+            <input id="calc" class="button_calc" type="submit" value="Рассчитать">
+        </div>
     </form>
-    <div>
-        <button id="calc" class="button_calc" type="button">Рассчитать</button>
-    </div>
     <form>
         <table class="table table_results">
         <caption>Результаты расчета на {{data}}: </caption>

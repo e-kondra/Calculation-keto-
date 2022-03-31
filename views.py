@@ -13,7 +13,9 @@ class About:
 
 class Calc:
     def __call__(self, request):
-        return '200 Ok', render('calc.html', data=request.get('data', None), style=request.get('style', None))
+        data = request.get('data', None)
+        style = request.get('style', None)
+        return '200 Ok', render('calc.html', data=data, style=style)
 
 
 class AddProduct:
@@ -24,3 +26,8 @@ class AddProduct:
 class NotFoundPage:
     def __call__(self, request):
         return '404 WHAT', '404 Page not found'
+
+
+class ContactUs:
+    def __call__(self, request):
+        return '200 OK', render('contact_us.html', style=request.get('style_cont', None))
