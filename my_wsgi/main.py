@@ -35,6 +35,7 @@ class MyFramework:
         if method == 'POST':
             data = PostRequest().get_request_params(environ)
             request['data'] = data
+            print(f'POST-запрос: {MyFramework.decode_value(data)}')
         if method == 'GET':
             parameters = GetRequest().get_request_params(environ)
             request['request_params'] = parameters

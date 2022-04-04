@@ -1,12 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <style>
-        {{style}}
-    </style>
-    <meta charset="UTF-8">
-    <title>Add product</title>
-</head>
+
+{% extends "base.html" %}
+{% block title %}
+    Добавить продукт
+{% endblock %}
+{% block style %}
+    {% include "style.html" %}
+{% endblock %}
+{% block menu %}
+    {% include "menu.html" %}
+{% endblock %}
+{% block body %}
 <body>
     <div>
         <label for="select_cat" >Выберите категорию</label>
@@ -36,7 +39,7 @@
             <td>20.7</td>
             <td>22.3</td>
             <td>0.6</td>
-            <td><input type="button" value="Выбрать"></td>
+            <td><input type="button" value="Добавить"></td>
         </tr>
         <tr>
             <td>Творог 11%</td>
@@ -44,7 +47,7 @@
             <td>16.0</td>
             <td>11.0</td>
             <td>1.0</td>
-            <td><input type="button" value="Выбрать"></td>
+            <td><input type="button" value="Добавить"></td>
         </tr>
         <tr>
             <td>Сыр Маасдам</td>
@@ -52,7 +55,7 @@
             <td>23.5</td>
             <td>26.0</td>
             <td>0.0</td>
-            <td><input type="button" value="Выбрать"></td>
+            <td><input type="button" value="Добавить"></td>
         </tr>
         <tr>
             <td>Яйцо куриное вареное</td>
@@ -60,7 +63,7 @@
             <td>12.9</td>
             <td>11.6</td>
             <td>0.8</td>
-            <td><input type="button" value="Выбрать"></td>
+            <td><input type="button" value="Добавить"></td>
         </tr>
         <tr>
             <td>Базилик свежий</td>
@@ -68,10 +71,10 @@
             <td>3.15</td>
             <td>0.64</td>
             <td>1.05</td>
-            <td><input type="button" value="Выбрать"></td>
+            <td><input type="button" value="Добавить"></td>
         </tr>
         </table>
         </form>
     </div>
 </body>
-</html>
+{% endblock %}

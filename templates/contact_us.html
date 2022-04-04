@@ -1,21 +1,15 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <style>
-
-        {{style}}
-    </style>
-    <meta charset="UTF-8">
-    <title>Contacts</title>
-</head>
+{% extends "base.html" %}
+{% block title %}
+    Обратная связь
+{% endblock %}
+{% block style %}
+    {% include "style_contact.html" %}
+{% endblock %}
+{% block menu %}
+    {% include "menu.html" %}
+{% endblock %}
+{% block body %}
 <body>
-    <div>
-        <ul class="menu">
-            <li><a href='/'>На главную</a></li>
-            <li><a href="/calc/">Калькулятор</a></li>
-            <li><a href="/about/">О проекте</a></li>
-        </ul>
-    </div>
     <div id="content">
         <h1> Форма для обратной связи </h1>
         <form action=" " method="post"  autocomplete="on">
@@ -39,4 +33,4 @@
         </form>
     </div>
 </body>
-</html>
+{% endblock %}

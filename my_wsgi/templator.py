@@ -2,7 +2,8 @@
 
 from os.path import join
 
-from jinja2 import Template
+from jinja2 import FileSystemLoader
+from jinja2.environment import Environment
 
 
 def render(template_name, folder='templates', **kwargs):
@@ -10,11 +11,9 @@ def render(template_name, folder='templates', **kwargs):
     Open and read templates context
     and render template with context-parameters.
     """
-    template_path = join(folder, template_name)
-
-    with open(template_path, 'r', encoding='utf-8') as f:
-        template = Template(f.read())
-
+    environment = Environment()
+    environment.loader = FileSystemLoader(folder)
+    template = environment.get_template(template_name)
     return template.render(**kwargs)
 
 
