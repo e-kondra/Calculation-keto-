@@ -1,6 +1,7 @@
 from datetime import date
 
-from views import Index, About, Calc, AddProduct, ContactUs
+
+from views import Index, About, Calc, AddProduct, ContactUs, CreateCategory, CategoryList, CreateProduct
 
 routes = {
     '/': Index(),
@@ -8,13 +9,15 @@ routes = {
     '/calc/': Calc(),
     '/add_product/': AddProduct(),
     '/contact_us/': ContactUs(),
+    '/create_category/': CreateCategory(),
+    '/category_list/': CategoryList(),
+    '/product/': CreateProduct(),
 }
-
 
 # front controller
 def secret_front(request):
-    request['data'] = date.today()
-    print(request['data'])
+    request['date'] = date.today()
+    print(request['date'])
 
 def other_front(request):
     request['key'] = 'key'

@@ -1,4 +1,3 @@
-
 {% extends "base.html" %}
 {% block title %}
     Добавить продукт
@@ -11,16 +10,7 @@
 {% endblock %}
 {% block body %}
 <body>
-    <div>
-        <label for="select_cat" >Выберите категорию</label>
-        <select class="select" id="select_cat" name="category_select">
-            <option value="oil">Жиры и масла</option>
-            <option value="milk">Молочные продукты</option>
-            <option value="fish">Рыба и морепродукты</option>
-            <option value="meat">Мясо и субпродукты</option>
-        </select>
-
-    </div>
+    {% include "category_list.html" %}
     <div>
         <form>
         <table class="table table_products">
@@ -39,7 +29,7 @@
             <td>20.7</td>
             <td>22.3</td>
             <td>0.6</td>
-            <td><input type="button" value="Добавить"></td>
+            <td><input type="button" value="Добавить в расчет"></td>
         </tr>
         <tr>
             <td>Творог 11%</td>
@@ -47,7 +37,7 @@
             <td>16.0</td>
             <td>11.0</td>
             <td>1.0</td>
-            <td><input type="button" value="Добавить"></td>
+            <td><input type="button" value="Добавить в расчет"></td>
         </tr>
         <tr>
             <td>Сыр Маасдам</td>
@@ -55,7 +45,7 @@
             <td>23.5</td>
             <td>26.0</td>
             <td>0.0</td>
-            <td><input type="button" value="Добавить"></td>
+            <td><input type="button" value="Добавить в расчет"></td>
         </tr>
         <tr>
             <td>Яйцо куриное вареное</td>
@@ -63,7 +53,7 @@
             <td>12.9</td>
             <td>11.6</td>
             <td>0.8</td>
-            <td><input type="button" value="Добавить"></td>
+            <td><input type="button" value="Добавить в расчет"></td>
         </tr>
         <tr>
             <td>Базилик свежий</td>
@@ -71,9 +61,10 @@
             <td>3.15</td>
             <td>0.64</td>
             <td>1.05</td>
-            <td><input type="button" value="Добавить"></td>
+            <td><input type="button" value="Добавить в расчет"></td>
         </tr>
         </table>
+        <a href="/product/">Добавить новый продукт</a>
         </form>
     </div>
 </body>

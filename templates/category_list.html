@@ -1,0 +1,11 @@
+<div class="category_list">
+    <div>
+        <label>Выберите категорию</label>
+        {% for category in category_list %}
+            <a href="{{category.name}}">{{category.name}}</a>
+        {% endfor %}
+    </div>
+    <div>
+		<a href="/create_category/">Создать новую категорию</a>
+	</div>
+</div>
