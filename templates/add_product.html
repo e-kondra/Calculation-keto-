@@ -23,48 +23,20 @@
             <th>Углеводы на 100гр/Гр</th>
             <th></th>
         </tr>
-        <tr>
-            <td>Лосось на гриле</td>
-            <td>283</td>
-            <td>20.7</td>
-            <td>22.3</td>
-            <td>0.6</td>
-            <td><input type="button" value="Добавить в расчет"></td>
-        </tr>
-        <tr>
-            <td>Творог 11%</td>
-            <td>170</td>
-            <td>16.0</td>
-            <td>11.0</td>
-            <td>1.0</td>
-            <td><input type="button" value="Добавить в расчет"></td>
-        </tr>
-        <tr>
-            <td>Сыр Маасдам</td>
-            <td>350</td>
-            <td>23.5</td>
-            <td>26.0</td>
-            <td>0.0</td>
-            <td><input type="button" value="Добавить в расчет"></td>
-        </tr>
-        <tr>
-            <td>Яйцо куриное вареное</td>
-            <td>160</td>
-            <td>12.9</td>
-            <td>11.6</td>
-            <td>0.8</td>
-            <td><input type="button" value="Добавить в расчет"></td>
-        </tr>
-        <tr>
-            <td>Базилик свежий</td>
-            <td>23</td>
-            <td>3.15</td>
-            <td>0.64</td>
-            <td>1.05</td>
-            <td><input type="button" value="Добавить в расчет"></td>
-        </tr>
+            {% include "product_list.html" %}
+<!--        {% for product in product_list %}-->
+<!--            <tr>-->
+<!--                <td>{{product.name}}</td>-->
+<!--                <td>{{product.kkal}}</td>-->
+<!--                <td>{{product.proteins.proteins}}</td>-->
+<!--                <td>{{product.fats.fats}}</td>-->
+<!--                <td>{{product.carbs.carbs}}</td>-->
+<!--                <td><a href="/add_product_in_calculation/?product_id={{product.id}}" class="button">Добавить в расчет</a>-->
+<!--                </td>-->
+<!--            </tr>-->
+<!--        {% endfor %}-->
         </table>
-        <a href="/product/">Добавить новый продукт</a>
+        <a href="/product/?category_id={{category_id}}">Добавить новый продукт</a>
         </form>
     </div>
 </body>

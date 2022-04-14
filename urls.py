@@ -1,7 +1,8 @@
 from datetime import date
 
 
-from views import Index, About, Calc, AddProduct, ContactUs, CreateCategory, CategoryList, CreateProduct
+from views import Index, About, Calc, AddProduct, ContactUs, CreateCategory, CategoryList, CreateProduct, \
+    AddProductCalculation
 
 routes = {
     '/': Index(),
@@ -12,6 +13,7 @@ routes = {
     '/create_category/': CreateCategory(),
     '/category_list/': CategoryList(),
     '/product/': CreateProduct(),
+    '/product_list/': AddProductCalculation()
 }
 
 # front controller

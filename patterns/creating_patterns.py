@@ -1,6 +1,8 @@
 import abc
 import quopri
 
+
+
 class Category:
     auto_id = 0
     def __init__(self, name, category):
@@ -13,6 +15,7 @@ class Engine:
     def __init__(self):
         self.categories = []
         self.products = []
+        self.calc_products = []
         self.calculations = []
 
     @staticmethod
@@ -25,19 +28,23 @@ class Engine:
                 return category
         raise Exception(f'Нет категории с id = {id}')
 
-    @staticmethod
-    def create_product(name, data):
+    # @staticmethod
+    def create_product(self, data, category):
         new_product = ProductBuilder()
-        Logger.log(f'new_product= {new_product}, data = {data}')
+        # Logger.log(f'new_product= {new_product},new_product.product.name = {new_product.product.name}, new_product.product.proteins = {new_product.product.proteins}')
         product_builder = DirectProductBuild()
-        product_builder.constructor(new_product, data)
+        product_builder.constructor(new_product, data, category)
         return new_product.product
 
     def find_product_by_id(self, id):
         for product in self.products:
-            if product.id == id:
+            if product.id == int(id):
                 return product
         raise Exception(f'Нет продукта с id = {id}')
+
+    def create_calculation(self, data):
+        return None
+
 
     @staticmethod
     def decode_value(val):
@@ -79,9 +86,9 @@ class DirectProductBuild:
     def __init__(self):
         self._product = None
 
-    def constructor(self, product, data):
+    def constructor(self, product, data, category):
         self._product = product
-        self._product._build_mainparts(data)
+        self._product._build_mainparts(data, category)
         self._product._build_proteins(data)
         self._product._build_fats(data)
         self._product._build_carbs(data)
@@ -94,39 +101,46 @@ class Product:
     kkal = 0
     water = 0
     cholesterol = 0
-    bzu = {}
+    proteins = {}
+    fats = {}
+    carbs = {}
+    vitamins = {}
 
 
 class ProductBuilder:
+    auto_id = 0
     def __init__(self):
         self.product = Product()
-        Logger.log(self.product)
+        self.product.id = ProductBuilder.auto_id
+        ProductBuilder.auto_id += 1
+        self.product.proteins = {}
+        self.product.fats = {}
+        self.product.carbs = {}
+        self.product.vitamins = {}
 
-    def _build_mainparts(self, data): # основные показатели(калорийность, вода, холестирин, наименование, категория)
-        self.product.name = data['name']
+    def _build_mainparts(self, data, category): # основные показатели(калорийность, вода, холестирин, наименование, категория)
+        self.product.name = Engine.decode_value(data['name'])
         self.product.kkal = data['kkal']
-        # self.product.category = data['category']
+        self.product.category = category
         self.product.water = data['water']
         self.product.cholesterol = data['cholesterol']
 
-
     def _build_proteins(self, data):  # белки
-        proteins = data['proteins']
-        dict_proteins = {}
-        dict_proteins['sum_proteins'] = proteins
-        self.product.bzu['proteins'] = dict_proteins
+        self.product.proteins['proteins'] = data['proteins']
 
     def _build_fats(self, data):  # жиры
-        fats = data['fats']
-        dict_fats = {}
-        dict_fats['sum_fats'] = fats
-        self.product.bzu['fats'] = dict_fats
+        self.product.fats['fats'] = data['fats']
 
     def _build_carbs(self, data): # углеводы
-        # self.carbs = data['carbs']
-        pass
+        self.product.carbs['carbs'] = data['carbs']
 
     def _build_vitamins(self, data): # витамины
-        # self.vitA = data['vitA']
-        # self.beta_carotene = data['beta_carotene']
-        pass
+        self.product.vitamins['vitA'] = data['vitA']
+        self.product.vitamins['beta_carotene'] = data['beta_carotene']
+
+
+class Calculation:
+    def __init__(self, ):
+        self.energy = 0
+        self.bzu = {}
+        self.products = []
