@@ -36,7 +36,7 @@ class Calc:
         if request['method'] == 'POST':
             data = request.get('data', None)
             calculation = engine.create_calculation(data)
-            return '200 Ok', render('calc.html', data=data, product_list=engine.products)
+            return '200 Ok', render('calc.html', product_list=engine.products)
         else:
             return '200 Ok', render('calc.html', product_list=engine.products)
 
@@ -111,22 +111,22 @@ class CreateProduct:
 
 class AddProductCalculation():
     def __call__(self, request):
-        if request['method'] == 'POST':
-            data = request['data']
-
-            product_id = data.get('product_id')
-            product = engine.find_product_by_id(product_id)
-
-            if product:
-                engine.calc_products.append(product)
-
-            return '200 OK', render('calc.html', product_calc_list=engine.calc_products)
-        else:
+        if request['method'] == 'GET':
             request_params = request['request_params']
             product_id = request_params.get('product_id')
-            product = engine.find_product_by_id(product_id)
-            if product:
+            product = None
+            if product_id:
+                product = engine.find_product_by_id(product_id)
+
+            if product and product not in engine.calc_products:
                 engine.calc_products.append(product)
-            for product in engine.calc_products:
-                print(product.id, product.name)
+
             return '200 OK', render('calc.html', product_calc_list=engine.calc_products)
+        if request['method'] == 'POST': # push button Calc
+            data = request['data']
+            calculation = engine.create_calculation(data)
+
+            if calculation:
+                engine.calculations.append(calculation)
+
+            return '200 OK', render('calc.html', product_calc_list=engine.calc_products, calc_list = calculation.results)

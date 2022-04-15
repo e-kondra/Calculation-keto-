@@ -23,18 +23,7 @@
             <th>Углеводы на 100гр/Гр</th>
             <th></th>
         </tr>
-            {% include "product_list.html" %}
-<!--        {% for product in product_list %}-->
-<!--            <tr>-->
-<!--                <td>{{product.name}}</td>-->
-<!--                <td>{{product.kkal}}</td>-->
-<!--                <td>{{product.proteins.proteins}}</td>-->
-<!--                <td>{{product.fats.fats}}</td>-->
-<!--                <td>{{product.carbs.carbs}}</td>-->
-<!--                <td><a href="/add_product_in_calculation/?product_id={{product.id}}" class="button">Добавить в расчет</a>-->
-<!--                </td>-->
-<!--            </tr>-->
-<!--        {% endfor %}-->
+        {% include "product_list.html" %}
         </table>
         <a href="/product/?category_id={{category_id}}">Добавить новый продукт</a>
         </form>

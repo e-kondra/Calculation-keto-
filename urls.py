@@ -19,7 +19,7 @@ routes = {
 # front controller
 def secret_front(request):
     request['date'] = date.today()
-    print(request['date'])
+    # print(request['date'])
 
 def other_front(request):
     request['key'] = 'key'
