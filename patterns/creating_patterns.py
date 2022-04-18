@@ -4,7 +4,6 @@ import copy
 from datetime import date
 
 
-
 class Category:
     auto_id = 0
     def __init__(self, name, category):

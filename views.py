@@ -1,6 +1,6 @@
 from my_wsgi.templator import render
 from patterns.creating_patterns import Engine, Logger
-
+from patterns.structural_patterns import AppRoute, Debug
 
 engine = Engine()
 engine.categories.append(engine.create_category('мясо'))
@@ -19,19 +19,23 @@ pig_liver = engine.create_product({'name': 'свиная печень', 'kkal': 
                                               'carbs': 0, 'water': '', 'cholesterol':'','vitA':'', 'beta_carotene':'',}, cat0)
 engine.products.append(pig_liver)
 
+routes = {}
 
-
+@AppRoute(routes=routes, url='/')
 class Index:
+    @Debug(name='Index')
     def __call__(self, request):
         return '200 OK', render('index.html')
 
-
+@AppRoute(routes=routes, url='/about/')
 class About:
+    @Debug(name='About')
     def __call__(self, request):
         return '200 Ok', render('about.html')
 
-
+@AppRoute(routes=routes, url='/calc/')
 class Calc:
+    @Debug(name='Calc')
     def __call__(self, request):
         if request['method'] == 'POST':
             data = request.get('data', None)
@@ -40,7 +44,10 @@ class Calc:
         else:
             return '200 Ok', render('calc.html', product_list=engine.products)
 
+
+@AppRoute(routes=routes, url='/add_product/')
 class AddProduct:
+    @Debug(name='AddProduct')
     def __call__(self, request):
         request_params = request['request_params']
         category_id = request_params.get('category_id')
@@ -52,12 +59,15 @@ class NotFoundPage:
         return '404 WHAT', '404 Page not found'
 
 
+@AppRoute(routes=routes, url='/contact_us/')
 class ContactUs:
     def __call__(self, request):
-        # return '200 OK', render('contact_us.html', style=request.get('style_cont', None))
         return '200 OK', render('contact_us.html')
 
+
+@AppRoute(routes=routes, url='/create_category/')
 class CreateCategory:
+    @Debug(name='CreateCategory')
     def __call__(self, request):
         if request['method'] == 'POST':
             data = request['data']
@@ -71,21 +81,26 @@ class CreateCategory:
             if category_id:
                 category = engine.find_category_by_id(int(category_id))
 
-            new_category = engine.create_category(cat_name, category)
+            if category not in engine.categories:
+                new_category = engine.create_category(cat_name, category)
+                engine.categories.append(new_category)
 
-            engine.categories.append(new_category)
-            return '200 OK', render('add_product.html', category_list = engine.categories)
+            return '200 OK', render('add_product.html', category_list = engine.categories, product_list=engine.products )
         else:
             categories = engine.categories
-            return '200 OK', render('create_category.html', category_list = categories)
+            return '200 OK', render('create_category.html', category_list = categories, product_list=engine.products)
 
 # контроллер - список категорий
+@AppRoute(routes=routes, url='/category_list/')
 class CategoryList:
+    @Debug(name='CategoryList')
     def __call__(self, request):
         return '200 OK', render('category_list.html', category_list=engine.categories)
 
 
+@AppRoute(routes=routes, url='/product/')
 class CreateProduct:
+    @Debug(name='CreateProduct')
     def __call__(self, request):
         if request['method'] == 'POST':
             data = request['data']
@@ -109,7 +124,10 @@ class CreateProduct:
             category_id = request_params.get('category_id')
             return '200 OK', render('product.html', category_list = engine.categories, category_id = category_id)
 
+
+@AppRoute(routes=routes, url='/product_list/')
 class AddProductCalculation():
+    @Debug(name='AddProductCalculation')
     def __call__(self, request):
         if request['method'] == 'GET':
             request_params = request['request_params']

@@ -3,18 +3,18 @@ from datetime import date
 
 from views import Index, About, Calc, AddProduct, ContactUs, CreateCategory, CategoryList, CreateProduct, \
     AddProductCalculation
-
-routes = {
-    '/': Index(),
-    '/about/': About(),
-    '/calc/': Calc(),
-    '/add_product/': AddProduct(),
-    '/contact_us/': ContactUs(),
-    '/create_category/': CreateCategory(),
-    '/category_list/': CategoryList(),
-    '/product/': CreateProduct(),
-    '/product_list/': AddProductCalculation()
-}
+#
+# routes = {
+#     #  '/': Index(),
+#     # '/about/': About(),
+#     # '/calc/': Calc(),
+#     # '/add_product/': AddProduct(),
+#     # '/contact_us/': ContactUs(),
+#     # '/create_category/': CreateCategory(),
+#     # '/category_list/': CategoryList(),
+#     # '/product/': CreateProduct(),
+#     # '/product_list/': AddProductCalculation()
+# }
 
 # front controller
 def secret_front(request):
