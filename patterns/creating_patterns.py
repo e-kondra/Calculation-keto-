@@ -3,10 +3,38 @@ import quopri
 import copy
 from datetime import date
 
+from behavioral_patterns import Subject, DBWriter
+
+
+# абстрактный пользователь
+class User:
+    def __init__(self, name):
+        self.name = name
+
+class Admin(User, Subject):
+    def __init__(self, name):
+        super().__init__(name)
+
+class OrdinaryUser(User, Subject):
+    def __init__(self, name):
+        super().__init__(name)
+
+
+# порождающий паттерн Абстрактная фабрика - фабрика пользователей
+class UserFactory:
+    types = {
+        'admin': Admin,
+        'o_user': OrdinaryUser
+    }
+    # порождающий паттерн Фабричный метод
+    @classmethod
+    def create(cls, type_, name):
+        return cls.types[type_](name)
+
 
 class Category:
     auto_id = 0
-    def __init__(self, name, category):
+    def __init__(self, name, category=None):
         self.id = Category.auto_id
         Category.auto_id += 1
         self.name = name
@@ -18,6 +46,16 @@ class Engine:
         self.products = []
         self.calc_products = []
         self.calculations = []
+        self.o_users = []
+
+    @staticmethod
+    def create_user(type_, name):
+        return UserFactory.create(type_, name)
+
+    def get_o_user(self, name) -> OrdinaryUser:
+        for item in self.o_users:
+            if item.name == name:
+                return item
 
     @staticmethod
     def create_category(name, category=None):
@@ -28,6 +66,12 @@ class Engine:
             if category.id == id:
                 return category
         raise Exception(f'Нет категории с id = {id}')
+
+    def find_category_by_name(self, name):
+        for category in self.categories:
+            if category.name == name:
+                return category
+        return None
 
     # @staticmethod
     def create_product(self, data, category):
@@ -47,6 +91,7 @@ class Engine:
         new_calculation = CalculationBuilder()
         calc_builder = DirectCalculationBuild()
         calc_builder.constructor(new_calculation, data, self.calc_products)
+        self.calc_products = []
         return new_calculation.calc
 
     def find_calculation_by_id(self, id):
@@ -115,7 +160,8 @@ class DirectCalculationBuild:
         self._calc._build_products(prod_list)
         self._calc._build_results(data)
 
-class CalculationBuilder:
+
+class CalculationBuilder(Subject):
     auto_id = 0
 
     def __init__(self):
@@ -125,6 +171,8 @@ class CalculationBuilder:
         self.calc.bzu = {}
         self.calc.products = []
         self.calc.results = []
+        self.observers = []
+        self.attach(DBWriter())
 
     def _build_mainparts(self, data):
         self.calc.date_calc = date.today()
@@ -137,6 +185,7 @@ class CalculationBuilder:
     def _build_products(self, prod_list):
         # todo. Добавить проверку на количество/качество введенных продуктов
         self.calc.products = copy.deepcopy(prod_list)
+
 
     def _build_results(self, data):
         x = self.calc.kkal / len(self.calc.products)
@@ -173,6 +222,8 @@ class CalculationBuilder:
         sum_result['carbs'] = round(sum_carbs, 3)
         sum_result['weight'] = round(sum_weight, 1)
         self.calc.results.append(sum_result)
+        self.notify()
+
 
 class DirectProductBuild:
     def __init__(self):

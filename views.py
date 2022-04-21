@@ -1,3 +1,4 @@
+from behavioral_patterns import ListView, CreateView, Subject, BaseSerializer
 from my_wsgi.templator import render
 from patterns.creating_patterns import Engine, Logger
 from patterns.structural_patterns import AppRoute, Debug
@@ -64,70 +65,66 @@ class ContactUs:
     def __call__(self, request):
         return '200 OK', render('contact_us.html')
 
-
 @AppRoute(routes=routes, url='/create_category/')
-class CreateCategory:
-    @Debug(name='CreateCategory')
-    def __call__(self, request):
-        if request['method'] == 'POST':
-            data = request['data']
-            print(data)
-            cat_name = data['name']
-            cat_name = engine.decode_value(cat_name)
+class CreateCategory(CreateView):
+    template_name = 'create_category.html'
+    template_name_post = 'add_product.html'
 
-            category_id = data.get('category_id')
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['category_list'] = engine.categories
+        context['product_list'] = engine.products
+        return context
 
-            category = None
-            if category_id:
-                category = engine.find_category_by_id(int(category_id))
+    def create_obj(self, data):
+        cat_name = data['name']
+        cat_name = engine.decode_value(cat_name)
 
-            if category not in engine.categories:
-                new_category = engine.create_category(cat_name, category)
-                engine.categories.append(new_category)
+        category = None
+        if cat_name:
+            category = engine.find_category_by_name(cat_name)
 
-            return '200 OK', render('add_product.html', category_list = engine.categories, product_list=engine.products )
-        else:
-            categories = engine.categories
-            return '200 OK', render('create_category.html', category_list = categories, product_list=engine.products)
+        if category == None or category not in engine.categories:
+            new_category = engine.create_category(cat_name, category)
+            engine.categories.append(new_category)
+
 
 # контроллер - список категорий
 @AppRoute(routes=routes, url='/category_list/')
-class CategoryList:
-    @Debug(name='CategoryList')
-    def __call__(self, request):
-        return '200 OK', render('category_list.html', category_list=engine.categories)
+class CategoryList(ListView):
+    # print('CategoryList(ListView)')
+    queryset = engine.categories
+    template_name = 'category_list.html'
 
 
 @AppRoute(routes=routes, url='/product/')
-class CreateProduct:
-    @Debug(name='CreateProduct')
-    def __call__(self, request):
-        if request['method'] == 'POST':
-            data = request['data']
+class CreateProduct(CreateView):
+    template_name = 'product.html'
+    template_name_post = 'add_product.html'
+    category_id = None
 
-            name = data['name']
-            name = engine.decode_value(name)
+    def get_context_data(self):
+        context = super().get_context_data()
+        context['category_list'] = engine.categories
+        context['product_list'] = engine.products
+        context['category_id'] = self.category_id
+        return context
 
-            category_id = data.get('category_id')
+    def create_obj(self, data):
+        name = data['name']
+        name = engine.decode_value(name)
+        self.category_id = data.get('category_id')
+        category = None
 
-            category = None
-            if category_id:
-                category = engine.find_category_by_id(int(category_id))
+        if self.category_id:
+            category = engine.find_category_by_id(int(self.category_id))
 
-            new_product = engine.create_product(data, category)
-            Logger.log(f'new_product = {data}')
-            engine.products.append(new_product)
-
-            return '200 OK', render('add_product.html', category_list = engine.categories, product_list=engine.products)
-        else:
-            request_params = request['request_params']
-            category_id = request_params.get('category_id')
-            return '200 OK', render('product.html', category_list = engine.categories, category_id = category_id)
+        new_product = engine.create_product(data, category)
+        engine.products.append(new_product)
 
 
 @AppRoute(routes=routes, url='/product_list/')
-class AddProductCalculation():
-    @Debug(name='AddProductCalculation')
+class AddProductCalculation:
     def __call__(self, request):
         if request['method'] == 'GET':
             request_params = request['request_params']
@@ -148,3 +145,10 @@ class AddProductCalculation():
                 engine.calculations.append(calculation)
 
             return '200 OK', render('calc.html', product_calc_list=engine.calc_products, calc_list = calculation.results)
+
+
+@AppRoute(routes=routes, url='/api/')
+class CourseApi:
+    @Debug(name='CourseApi')
+    def __call__(self, request):
+        return '200 OK', BaseSerializer(engine.calculations).save()

@@ -2,7 +2,7 @@ from my_wsgi.main import MyFramework, DebugApplication
 from urls import fronts
 from wsgiref.simple_server import make_server
 from views import routes
-from wsgiref.util import setup_testing_defaults
+
 
 
 
@@ -23,9 +23,9 @@ from wsgiref.util import setup_testing_defaults
 #         start_response(code, [('Content-Type', 'text/html')])
 #         return body
 
-# application = MyFramework(routes, fronts)
+application = MyFramework(routes, fronts)
 
-application = DebugApplication(routes, fronts)
+# application = DebugApplication(routes, fronts)
 
 # application = FakeApplication(routes, fronts)
 
