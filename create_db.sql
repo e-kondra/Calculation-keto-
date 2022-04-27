@@ -18,7 +18,7 @@ CREATE TABLE product(
     name VARCHAR (128) NOT NULL,
     is_active INTEGER DEFAULT 1,
     kkal INTEGER NOT NULL,
-    water INTEGER NOT NULL,
+    water INTEGER,
     proteins REAL NOT NULL,
     fats REAL NOT NULL,
     carbs REAL NOT NULL,

@@ -1,24 +1,28 @@
 from behavioral_patterns import ListView, CreateView, Subject, BaseSerializer
 from my_wsgi.templator import render
-from patterns.creating_patterns import Engine, Logger
+from patterns.creating_patterns import Engine, Logger, MapperRegistry
 from patterns.structural_patterns import AppRoute, Debug
+from architect_pattern_unit_of_work import UnitOfWork
+
+UnitOfWork.new_current()
+UnitOfWork.get_current().set_mapper_registry(MapperRegistry)
 
 engine = Engine()
-engine.categories.append(engine.create_category('мясо'))
-engine.categories.append(engine.create_category('рыба'))
-engine.categories.append(engine.create_category('молочные продукты'))
+# engine.categories.append(engine.create_category('мясо'))
+# engine.categories.append(engine.create_category('рыба'))
+# engine.categories.append(engine.create_category('молочные продукты'))
 engine.products = []
-cat2 = engine.find_category_by_id(2)
-cat0 = engine.find_category_by_id(0)
-cheese = engine.create_product({'name': 'сыр Чеддер', 'kkal': 404, 'proteins':22.9, 'fats': 33.31,
-                                              'carbs': 3.1, 'water': '', 'cholesterol':'', 'vitA':'', 'beta_carotene':'', }, cat2)
-engine.products.append(cheese)
-liver = engine.create_product({'name': 'говяжья печень', 'kkal': 134, 'category_id':'0', 'proteins':21.39, 'fats': 1.23,
-                                              'carbs': 0, 'water': '', 'cholesterol':'','vitA':'', 'beta_carotene':'',}, cat0)
-engine.products.append(liver)
-pig_liver = engine.create_product({'name': 'свиная печень', 'kkal': 134, 'category_id':'0', 'proteins':21.34, 'fats': 3.7,
-                                              'carbs': 0, 'water': '', 'cholesterol':'','vitA':'', 'beta_carotene':'',}, cat0)
-engine.products.append(pig_liver)
+# cat2 = engine.find_category_by_id(2)
+# cat0 = engine.find_category_by_id(0)
+# cheese = engine.create_product({'name': 'сыр Чеддер', 'kkal': 404, 'proteins':22.9, 'fats': 33.31,
+#                                               'carbs': 3.1, 'water': '', 'cholesterol':'', 'vitA':'', 'beta_carotene':'', }, 2)
+# engine.products.append(cheese)
+# liver = engine.create_product({'name': 'говяжья печень', 'kkal': 134, 'category_id':'0', 'proteins':21.39, 'fats': 1.23,
+#                                               'carbs': 0, 'water': '', 'cholesterol':'','vitA':'', 'beta_carotene':'',}, 0)
+# engine.products.append(liver)
+# pig_liver = engine.create_product({'name': 'свиная печень', 'kkal': 134, 'category_id':'0', 'proteins':21.34, 'fats': 3.7,
+#                                               'carbs': 0, 'water': '', 'cholesterol':'','vitA':'', 'beta_carotene':'',}, 0)
+# engine.products.append(pig_liver)
 
 routes = {}
 
@@ -51,8 +55,11 @@ class AddProduct:
     @Debug(name='AddProduct')
     def __call__(self, request):
         request_params = request['request_params']
+        # print(request)
+        category_list = MapperRegistry.get_current_mapper('category').all()
+        product_list = MapperRegistry.get_current_mapper('product').all()
         category_id = request_params.get('category_id')
-        return '200 Ok', render('add_product.html', category_list = engine.categories, product_list=engine.products, category_id=category_id)
+        return '200 Ok', render('add_product.html', category_list = category_list, product_list=product_list, category_id=category_id)
 
 
 class NotFoundPage:
@@ -65,6 +72,8 @@ class ContactUs:
     def __call__(self, request):
         return '200 OK', render('contact_us.html')
 
+
+
 @AppRoute(routes=routes, url='/create_category/')
 class CreateCategory(CreateView):
     template_name = 'create_category.html'
@@ -72,8 +81,8 @@ class CreateCategory(CreateView):
 
     def get_context_data(self):
         context = super().get_context_data()
-        context['category_list'] = engine.categories
-        context['product_list'] = engine.products
+        context['category_list'] = MapperRegistry.get_current_mapper('category').all()
+        context['product_list'] = MapperRegistry.get_current_mapper('product').all()
         return context
 
     def create_obj(self, data):
@@ -82,18 +91,25 @@ class CreateCategory(CreateView):
 
         category = None
         if cat_name:
-            category = engine.find_category_by_name(cat_name)
+            category = MapperRegistry.get_current_mapper('category').find_by_name(cat_name)
+            # category = engine.find_category_by_name(cat_name)
 
-        if category == None or category not in engine.categories:
-            new_category = engine.create_category(cat_name, category)
+        if category == None:
+                # or category not in engine.categories:
+            new_category = engine.create_category(cat_name)
             engine.categories.append(new_category)
+            new_category.mark_new()
+            UnitOfWork.get_current().commit()
 
 
 # контроллер - список категорий
 @AppRoute(routes=routes, url='/category_list/')
 class CategoryList(ListView):
     # print('CategoryList(ListView)')
-    queryset = engine.categories
+    def get_queryset(self):
+        mapper = MapperRegistry.get_current_mapper('category')
+        return mapper.all()
+    # queryset = engine.categories
     template_name = 'category_list.html'
 
 
@@ -105,8 +121,8 @@ class CreateProduct(CreateView):
 
     def get_context_data(self):
         context = super().get_context_data()
-        context['category_list'] = engine.categories
-        context['product_list'] = engine.products
+        context['category_list'] = MapperRegistry.get_current_mapper('category').all()
+        context['product_list'] = MapperRegistry.get_current_mapper('product').all()
         context['category_id'] = self.category_id
         return context
 
@@ -117,10 +133,12 @@ class CreateProduct(CreateView):
         category = None
 
         if self.category_id:
-            category = engine.find_category_by_id(int(self.category_id))
+            category = MapperRegistry.get_current_mapper('category').find_by_id(self.category_id)
 
         new_product = engine.create_product(data, category)
         engine.products.append(new_product)
+        new_product.mark_new()
+        UnitOfWork.get_current().commit()
 
 
 @AppRoute(routes=routes, url='/product_list/')
@@ -131,11 +149,12 @@ class AddProductCalculation:
             product_id = request_params.get('product_id')
             product = None
             if product_id:
-                product = engine.find_product_by_id(product_id)
+                product = MapperRegistry.get_current_mapper('product').find_by_id(product_id)
+                # product = engine.find_product_by_id(product_id)
 
             if product and product not in engine.calc_products:
                 engine.calc_products.append(product)
-
+            print(f'calc_products = {engine.calc_products}')
             return '200 OK', render('calc.html', product_calc_list=engine.calc_products)
         if request['method'] == 'POST': # push button Calc
             data = request['data']

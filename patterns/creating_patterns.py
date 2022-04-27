@@ -1,8 +1,10 @@
 import abc
 import quopri
 import copy
+import sqlite3
 from datetime import date
 
+from architect_pattern_unit_of_work import DomainObject
 from behavioral_patterns import Subject, DBWriter
 
 
@@ -32,13 +34,14 @@ class UserFactory:
         return cls.types[type_](name)
 
 
-class Category:
+class Category(DomainObject):
     auto_id = 0
-    def __init__(self, name, category=None):
+    def __init__(self, name):
         self.id = Category.auto_id
         Category.auto_id += 1
         self.name = name
-        self.category = category
+
+
 
 class Engine:
     def __init__(self):
@@ -59,7 +62,7 @@ class Engine:
 
     @staticmethod
     def create_category(name, category=None):
-        return Category(name, category)
+        return Category(name,)
 
     def find_category_by_id(self, id):
         for category in self.categories:
@@ -237,7 +240,8 @@ class DirectProductBuild:
         self._product._build_carbs(data)
         self._product._build_vitamins(data)
 
-class Product:
+class Product(DomainObject):
+    id = None
     name = ''
     category = None
     kkal = 0
@@ -255,17 +259,20 @@ class ProductBuilder:
         self.product = Product()
         self.product.id = ProductBuilder.auto_id
         ProductBuilder.auto_id += 1
+        self.product.category = None
         self.product.proteins = {}
         self.product.fats = {}
         self.product.carbs = {}
         self.product.vitamins = {}
 
     def _build_mainparts(self, data, category): # основные показатели(калорийность, вода, холестирин, наименование, категория)
+        print(f'category_build_mainparts = {category}')
+        self.product.id = int(data.get('id'))
         self.product.name = Engine.decode_value(data['name'])
         self.product.kkal = int(data.get('kkal'))
         self.product.category = category
         self.product.water = data.get('water')
-        self.product.cholesterol = data.get('cholesterol')
+
 
     def _build_proteins(self, data):  # белки
         self.product.proteins['proteins'] = float(data.get('proteins'))
@@ -280,4 +287,218 @@ class ProductBuilder:
         self.product.vitamins['vitA'] = data.get('vitA')
         self.product.vitamins['beta_carotene'] = data.get('beta_carotene')
 
+class ItemMapper:
+    classes = {
+        'categories': Category,
+        'products': Product,
+        'calculation': Calculation
+    }
 
+    def __init__(self, connection, tablename):
+        self.connection = connection
+        self.cursor = connection.cursor()
+        self.tablename = tablename
+        self.column_list = self.get_column_list()
+
+    def get_column_list(self):
+        for row in self.connection.execute(f"pragma table_info('{self.tablename}')").fetchall():
+            self.column_list.append(row[1])
+
+    def get_cursor_tuple(self, obj):
+        if obj.cursor_tuple:
+            return obj.cursor_tuple
+        else:
+            variables = obj.__dict__
+            cursor_list = []
+            for item in self.column_list[1:]:
+                cursor_list.append(variables.get(item, None))
+            cursor_tuple = tuple(cursor_list)
+            return cursor_tuple
+
+    def insert(self, obj):
+        # формируем список колонок в таблице
+        column_str = str(self.column_list[1:])
+        column_str = column_str.replace("'", "").replace('[', '(').replace(']', ')')
+        # список из вопросов
+        questions_str = '?,' * len(self.column_list[1:])
+        questions_str = questions_str[:-1]
+
+        cursor_tuple = self.get_cursor_tuple(obj)
+
+        statement = f'INSERT INTO {self.tablename} {column_str} VALUES ({questions_str})'
+        self.cursor.execute(statement, cursor_tuple)
+
+        try:
+            self.connection.commit()
+        except Exception as e:
+            raise DbCommitException(e.args)
+
+
+class CategoryMapper:
+
+    def __init__(self, connection):
+        self.connection = connection
+        self.cursor = connection.cursor()
+        self.tablename = 'category'
+
+    def all(self):
+        statement = f'SELECT * FROM {self.tablename}'
+        self.cursor.execute(statement)
+        result = []
+        for item in self.cursor.fetchall():
+            id, name = item
+            category = Category(name)
+            category.id = id
+            result.append(category)
+        return result
+
+    def find_by_id(self, id):
+        statement = f'SELECT id, name FROM {self.tablename} WHERE id=?'
+        self.cursor.execute(statement, (id,))
+        result = self.cursor.fetchone()
+        if result:
+            return Category(result[1])
+        else:
+            raise RecordNotFoundException(f'record with id={id} not found')
+
+    def find_id_by_name(self, name):
+        statement = f'SELECT id FROM {self.tablename} WHERE name=?'
+        self.cursor.execute(statement, (name,))
+        return self.cursor.fetchone()[0]
+
+    def find_by_name(self, name):
+        statement = f'SELECT id, name FROM {self.tablename} WHERE name=?'
+        self.cursor.execute(statement, (name,))
+        result = self.cursor.fetchone()
+        if result:
+            return Category(result[1])
+        else:
+            return None
+
+    def insert(self, obj):
+        statement = f"INSERT INTO {self.tablename} (name) VALUES (?)"
+        self.cursor.execute(statement, (obj.name,))
+        try:
+            self.connection.commit()
+        except Exception as e:
+            raise DbCommitException(e.args)
+
+    def update(self, obj):
+        statement = f"UPDATE {self.tablename} SET name=? WHERE id=?"
+        # Где взять obj.id? Добавить в DomainModel? Или добавить когда берем объект из базы
+        self.cursor.execute(statement, (obj.name, obj.id))
+        try:
+            self.connection.commit()
+        except Exception as e:
+            raise DbUpdateException(e.args)
+
+    def delete(self, obj):
+        statement = f'DELETE FROM {self.tablename} WHERE id=?'
+        self.cursor.execute(statement, (obj.id,))
+        try:
+            self.connection.commit()
+        except Exception as e:
+            raise DbDeleteException(e.args)
+
+
+connection = sqlite3.connect('calc.db')
+
+class ProductMapper:
+    def __init__(self, connection):
+        self.connection = connection
+        self.cursor = connection.cursor()
+        self.tablename = 'product'
+
+    def all(self):
+        statement = f'SELECT * FROM {self.tablename} WHERE is_active = 1'
+        self.cursor.execute(statement)
+        result = []
+        for item in self.cursor.fetchall():
+            id, category_id, name, is_active, kkal, water, proteins, fats, carbs = item
+            print(item)
+            product = Product()
+            product.id = id
+            product.category = category_id
+            product.name = name
+            product.kkal = kkal
+            product.water = water
+            product.proteins = {}
+            product.proteins['proteins'] = proteins
+            product.fats = {}
+            product.fats['fats'] = fats
+            product.carbs = {}
+            product.carbs['carbs'] = carbs
+            result.append(product)
+        print(f'result = {result}')
+        return result
+
+    def insert(self, obj):
+        proteins = float(obj.proteins.get("proteins", 0))
+        fats = float(obj.fats.get("fats", 0))
+        carbs = float(obj.carbs.get("carbs",0))
+        category_id = MapperRegistry.get_current_mapper('category').find_id_by_name(obj.category.name)
+
+        statement = f"INSERT INTO {self.tablename} (category_id, name, is_active, kkal, water, proteins, fats, carbs) VALUES (?,?,?,?,?,?,?,?)"
+        self.cursor.execute(statement, (category_id, obj.name, 1, obj.kkal, obj.water, proteins, fats, carbs))
+        try:
+            self.connection.commit()
+        except Exception as e:
+            raise DbCommitException(e.args)
+
+    def find_by_id(self, id):
+        statement = f'SELECT id, category_id, name, kkal, water, proteins, fats, carbs FROM {self.tablename} WHERE id=?'
+        self.cursor.execute(statement, (id,))
+        result = self.cursor.fetchone()
+        id, category_id, name, kkal, water, proteins, fats, carbs = result
+        data = {'id': id, 'name': name, 'kkal': kkal, 'water': water, 'proteins': proteins, 'fats': fats, 'carbs': carbs}
+        category = category_id
+        print(name, proteins)
+        new_product = ProductBuilder()
+        # Logger.log(f'new_product= {new_product},new_product.product.name = {new_product.product.name}, new_product.product.proteins = {new_product.product.proteins}')
+        product_builder = DirectProductBuild()
+        product_builder.constructor(new_product, data, category)
+
+        print(result)
+        if result:
+            return new_product.product
+        else:
+            raise RecordNotFoundException(f'record with id={id} not found')
+
+# архитектурный системный паттерн - Data Mapper
+class MapperRegistry:
+    mappers = {
+        'product': ProductMapper,
+        'category': CategoryMapper,
+    }
+
+    @staticmethod
+    def get_mapper(object):
+
+        if isinstance(object, Category):
+            return CategoryMapper(connection)
+        if isinstance(object, Product):
+            return ProductMapper(connection)
+
+    @staticmethod
+    def get_current_mapper(name):
+        return MapperRegistry.mappers[name](connection)
+
+
+class RecordNotFoundException(Exception):
+    def __init__(self, message):
+        super().__init__(f'Record not found: {message}')
+
+
+class DbCommitException(Exception):
+    def __init__(self, message):
+        super().__init__(f'Db commit error: {message}')
+
+
+class DbUpdateException(Exception):
+    def __init__(self, message):
+        super().__init__(f'Db update error: {message}')
+
+
+class DbDeleteException(Exception):
+    def __init__(self, message):
+        super().__init__(f'Db delete error: {message}')

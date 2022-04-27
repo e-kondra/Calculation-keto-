@@ -36,6 +36,7 @@ class ListView(TemplateView):
 
     def get_context_data(self):
         queryset = self.get_queryset()
+        # print(f'queryset= {queryset}')
         context_object_name = self.get_context_object_name()
         context = {context_object_name: queryset}
         return context
