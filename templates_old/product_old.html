@@ -1,0 +1,135 @@
+{% extends "base.html" %}
+{% block title %}
+Добавить продукт
+{% endblock %}
+{% block style %}
+{% include "style_product.html" %}
+{% endblock %}
+{% block body %}
+<body>
+<form method="post">
+    <div class="grid">
+        <label for="name">Название продукта</label>
+        <input type="text" id="name" name="name" placeholder="Название продукта">
+        <select name="category_id">
+            {% for category in category_list %}
+            <option selected="{{category_id}}" value={{category.id}}>{{category.name}}</option>
+            {% endfor %}}
+        </select>
+        <label for="kkal">Калорийность 100гр</label>
+        <input type="number" step="0.1" id="kkal" name="kkal" placeholder="Калорийность 100гр">
+    </div>
+    <label><h3>Белки</h3></label>
+    <div class="grid">
+        <label for="proteins"><h4>Содержание белка в 100 гр</h4></label>
+        <input type="number" step="0.01" id="proteins" name="proteins" placeholder="Содержание белка в 100 гр">
+        <label for="tryptophan">Триптофан</label>
+        <input type="number" step="0.001" id="tryptophan" name="tryptophan" placeholder="Триптофан гр">
+        <label for="threonine">Треонин</label>
+        <input type="number" step="0.001" id="threonine" name="threonine" placeholder="Треонин гр">
+        <label for="isoleucine">Изолейцин</label>
+        <input type="number" step="0.001" id="isoleucine" name="isoleucine" placeholder="Изолейцин гр">
+        <label for="leucine">Лейцин</label>
+        <input type="number" step="0.001" id="leucine" name="leucine" placeholder="Лейцин гр">
+        <label for="lysine">Лизин</label>
+        <input type="number" step="0.001" id="lysine" name="lysine" placeholder="Лизин гр">
+        <label for="methionine">Метионин</label>
+        <input type="number" step="0.001" id="methionine" name="methionine" placeholder="Метионин гр">
+        <label for="cystine">Цистин</label>
+        <input type="number" step="0.001" id="cystine" name="cystine" placeholder="Цистин гр">
+        <label for="phenylalanine">Фенилаланин</label>
+        <input type="number" step="0.001" id="phenylalanine" name="phenylalanine" placeholder="Фенилаланин гр">
+        <label for="tyrosine">Тирозин</label>
+        <input type="number" step="0.001" id="tyrosine" name="tyrosine" placeholder="Тирозин гр">
+        <label for="valine">Валин</label>
+        <input type="number" step="0.001" id="valine" name="valine" placeholder="Валин гр">
+        <label for="arginine">Аргинин</label>
+        <input type="number" step="0.001" id="arginine" name="arginine" placeholder="Аргинин гр">
+        <label for="histidine">Гистидин</label>
+        <input type="number" step="0.001" id="histidine" name="histidine" placeholder="Гистидин гр">
+        <label for="alanine">Аланин</label>
+        <input type="number" step="0.001" id="alanine" name="alanine" placeholder="Аланин гр">
+        <label for="aspartic">Аспарагиновая кислота</label>
+        <input type="number" step="0.001" id="aspartic" name="aspartic" placeholder="Аспарагиновая кислота гр">
+        <label for="glutamic">Глутаминовая кислота</label>
+        <input type="number" step="0.001" id="glutamic" name="glutamic" placeholder="Глутаминовая кислота гр">
+        <label for="glycine">Глицин</label>
+        <input type="number" step="0.001" id="glycine" name="glycine" placeholder="Глицин гр">
+        <label for="proline">Пролин</label>
+        <input type="number" step="0.001" id="proline" name="proline" placeholder="Пролин гр">
+        <label for="serine">Серин</label>
+        <input type="number" step="0.001" id="serine" name="serine" placeholder="Серин гр">
+    </div>
+    <label><h3>Жиры</h3></label>
+    <div class="grid">
+        <label for="fats"><h4>Содержание жиров в 100 гр</h4></label>
+        <input type="number" step="0.01" id="fats" name="fats" placeholder="Содержание жиров в 100 гр">
+        <label for="saturated">Насыщенные жирные кислоты</label>
+        <input type="number" step="0.001" id="saturated" name="saturated" placeholder="Насыщенные жирные кислоты гр">
+        <label for="butyric">Масляная кислота (бутановая к-та)</label>
+        <input type="number" step="0.001" id="butyric" name="butyric" placeholder="Масляная кислота гр">
+        <label for="caproic">Капроновая кислота</label>
+        <input type="number" step="0.001" id="caproic" name="caproic" placeholder="Капроновая кислота гр">
+        <label for="caprylic">Каприловая кислота</label>
+        <input type="number" step="0.001" id="caprylic" name="caprylic" placeholder="Каприловая кислота гр">
+        <label for="capric">Каприновая кислота</label>
+        <input type="number" step="0.001" id="capric" name="capric" placeholder="Каприновая кислота гр">
+    </div>
+    <label><h3>Углеводы</h3></label>
+    <div>
+        <div class="grid">
+            <label for="carbs"><h4>Содержание углеводов в 100 гр</h4></label>
+            <input type="number" step="0.01" id="carbs" name="carbs" placeholder="Содержание углеводов в 100 гр">
+        </div>
+        <label><h4>Моносахариды</h4></label>
+        <div class="grid">
+            <label for="glucose">Глюкоза</label>
+            <input type="number" step="0.01" id="glucose" name="glucose" placeholder="Глюкоза гр">
+            <label for="fructose">Фруктоза</label>
+            <input type="number" step="0.01" id="fructose" name="fructose" placeholder="Фруктоза гр">
+            <label for="galactose">Галактоза</label>
+            <input type="number" step="0.01" id="galactose" name="galactose" placeholder="Галактоза гр">
+        </div>
+        <label><h4>Дисахариды</h4></label>
+        <div class="grid">
+            <label for="sucrose">Сахароза</label>
+            <input type="number" step="0.01" id="sucrose" name="sucrose" placeholder="Сахароза гр">
+            <label for="lactose">Лактоза</label>
+            <input type="number" step="0.01" id="lactose" name="lactose" placeholder="Лактоза гр">
+            <label for="maltose">Мальтоза</label>
+            <input type="number" step="0.01" id="maltose" name="maltose" placeholder="Мальтоза гр">
+        </div>
+        <div class="grid">
+            <label for="sum_sugar"><h4>Всего сахаров:</h4></label>
+            <input type="number" step="0.01" id="sum_sugar" name="sum_sugar" placeholder="Всего сахаров гр">
+        </div>
+        <label><h4>Полисахариды</h4></label>
+        <div class="grid">
+            <label for="fiber">Клетчатка</label>
+            <input type="number" step="0.01" id="fiber" name="fiber" placeholder="Клетчатка гр">
+            <label for="starch">Крахмал</label>
+            <input type="number" step="0.01" id="starch" name="starch" placeholder="Крахмал гр">
+        </div>
+    </div>
+    <label><h3>Витамины</h3></label>
+    <div class="grid">
+        <label for="vitA">Витамин А</label>
+        <input type="number" step="0.01" id="vitA" name="vitA" placeholder="Витамин А мкг">
+        <label for="beta_carotene">Бета-каротин</label>
+        <input type="number" step="0.01" id="beta_carotene" name="beta_carotene" placeholder="Бета-каротин мкг">
+    </div>
+    <label><h3> --- --- --- --- </h3></label>
+    <div class="grid">
+        <label for="water">Вода</label>
+        <input type="number" step="0.01" id="water" name="water" placeholder="Вода г">
+        <label for="cholesterol">Холестерин</label>
+        <input type="number" step="0.01" id="cholesterol" name="cholesterol" placeholder="Холестерин">
+        <label for="ash">Зола</label>
+        <input type="number" step="0.01" id="ash" name="ash" placeholder="Зола">
+    </div>
+    <button type="submit">Сохранить</button>
+    <button type="submit">Вернуться</button>
+</form>
+</body>
+{% endblock %}
+

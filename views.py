@@ -1,4 +1,7 @@
-from behavioral_patterns import ListView, CreateView, Subject, BaseSerializer
+import hashlib
+
+from behavioral_patterns import ListView, CreateView, Subject, BaseSerializer, TemplateView
+from common_utils import make_hash
 from my_wsgi.templator import render
 from patterns.creating_patterns import Engine, Logger, MapperRegistry
 from patterns.structural_patterns import AppRoute, Debug
@@ -8,22 +11,7 @@ UnitOfWork.new_current()
 UnitOfWork.get_current().set_mapper_registry(MapperRegistry)
 
 engine = Engine()
-# engine.categories.append(engine.create_category('мясо'))
-# engine.categories.append(engine.create_category('рыба'))
-# engine.categories.append(engine.create_category('молочные продукты'))
 engine.products = []
-# cat2 = engine.find_category_by_id(2)
-# cat0 = engine.find_category_by_id(0)
-# cheese = engine.create_product({'name': 'сыр Чеддер', 'kkal': 404, 'proteins':22.9, 'fats': 33.31,
-#                                               'carbs': 3.1, 'water': '', 'cholesterol':'', 'vitA':'', 'beta_carotene':'', }, 2)
-# engine.products.append(cheese)
-# liver = engine.create_product({'name': 'говяжья печень', 'kkal': 134, 'category_id':'0', 'proteins':21.39, 'fats': 1.23,
-#                                               'carbs': 0, 'water': '', 'cholesterol':'','vitA':'', 'beta_carotene':'',}, 0)
-# engine.products.append(liver)
-# pig_liver = engine.create_product({'name': 'свиная печень', 'kkal': 134, 'category_id':'0', 'proteins':21.34, 'fats': 3.7,
-#                                               'carbs': 0, 'water': '', 'cholesterol':'','vitA':'', 'beta_carotene':'',}, 0)
-# engine.products.append(pig_liver)
-
 routes = {}
 
 @AppRoute(routes=routes, url='/')
@@ -32,11 +20,12 @@ class Index:
     def __call__(self, request):
         return '200 OK', render('index.html')
 
-@AppRoute(routes=routes, url='/about/')
-class About:
-    @Debug(name='About')
+@AppRoute(routes=routes, url='/history/')
+class History:
+    @Debug(name='History')
     def __call__(self, request):
-        return '200 Ok', render('about.html')
+        return '200 Ok', render('history.html')
+
 
 @AppRoute(routes=routes, url='/calc/')
 class Calc:
@@ -45,21 +34,24 @@ class Calc:
         if request['method'] == 'POST':
             data = request.get('data', None)
             calculation = engine.create_calculation(data)
-            return '200 Ok', render('calc.html', product_list=engine.products)
+            return '200 Ok', render('calc.html', product_calc_list=engine.calc_products)
         else:
-            return '200 Ok', render('calc.html', product_list=engine.products)
+            return '200 Ok', render('calc.html', product_calc_list=engine.calc_products)
 
 
 @AppRoute(routes=routes, url='/add_product/')
 class AddProduct:
     @Debug(name='AddProduct')
     def __call__(self, request):
-        request_params = request['request_params']
-        # print(request)
-        category_list = MapperRegistry.get_current_mapper('category').all()
-        product_list = MapperRegistry.get_current_mapper('product').all()
-        category_id = request_params.get('category_id')
-        return '200 Ok', render('add_product.html', category_list = category_list, product_list=product_list, category_id=category_id)
+        if request['method'] == 'GET':
+            request_params = request['request_params']
+            # print(request)
+            category_list = MapperRegistry.get_current_mapper('category').all()
+            product_list = MapperRegistry.get_current_mapper('product').all()
+            category_id = request_params.get('category_id')
+            is_admin = engine.is_admin
+            return '200 Ok', render('add_product.html', category_list = category_list, product_list=product_list, category_id=category_id, is_admin = is_admin)
+
 
 
 class NotFoundPage:
@@ -68,10 +60,8 @@ class NotFoundPage:
 
 
 @AppRoute(routes=routes, url='/contact_us/')
-class ContactUs:
-    def __call__(self, request):
-        return '200 OK', render('contact_us.html')
-
+class ContactUs(TemplateView):
+    template_name = 'contact_us.html'
 
 
 @AppRoute(routes=routes, url='/create_category/')
@@ -86,7 +76,7 @@ class CreateCategory(CreateView):
         return context
 
     def create_obj(self, data):
-        cat_name = data['name']
+        cat_name = data['new_category_name']
         cat_name = engine.decode_value(cat_name)
 
         category = None
@@ -130,6 +120,7 @@ class CreateProduct(CreateView):
         name = data['name']
         name = engine.decode_value(name)
         self.category_id = data.get('category_id')
+        print(f'create_obj. data = {data}')
         category = None
 
         if self.category_id:
@@ -151,10 +142,14 @@ class AddProductCalculation:
             if product_id:
                 product = MapperRegistry.get_current_mapper('product').find_by_id(product_id)
                 # product = engine.find_product_by_id(product_id)
+            if product:
+                for cp in engine.calc_products:
+                    # совпадение наименования и колоража - считаем что продукт уже в таблице
+                    if cp.__dict__['name'] == product.__dict__['name'] and cp.__dict__['kkal'] == product.__dict__['kkal']:
+                        return '200 OK', render('calc.html', product_calc_list=engine.calc_products)
 
-            if product and product not in engine.calc_products:
                 engine.calc_products.append(product)
-            print(f'calc_products = {engine.calc_products}')
+            # print(f'calc_products = {engine.calc_products}')
             return '200 OK', render('calc.html', product_calc_list=engine.calc_products)
         if request['method'] == 'POST': # push button Calc
             data = request['data']
@@ -166,8 +161,29 @@ class AddProductCalculation:
             return '200 OK', render('calc.html', product_calc_list=engine.calc_products, calc_list = calculation.results)
 
 
+@AppRoute(routes=routes, url='/admin/')
+class AdminAuthentication:
+    def __call__(self, request):
+        if request['method'] == 'GET':
+            return '200 OK', render('registr.html')
+        if request ['method'] == 'POST':
+            data = request['data']
+            login = 'admin'
+            password = data.get('password', None)
+            hash = make_hash(password)
+            is_correct_pswd = MapperRegistry.get_current_mapper('user').check_password(login, hash)
+            if is_correct_pswd:
+                engine.is_admin = True
+                print(f'is_admin = {engine.is_admin}')
+                return '200 OK', render('index.html')
+            else:
+                engine.is_admin = False
+                print('Авторизация не удалась')
+                return '200 OK', render('index.html')
+
 @AppRoute(routes=routes, url='/api/')
 class CourseApi:
     @Debug(name='CourseApi')
     def __call__(self, request):
         return '200 OK', BaseSerializer(engine.calculations).save()
+

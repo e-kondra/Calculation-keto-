@@ -1,7 +1,7 @@
 from datetime import date
 
 
-from views import Index, About, Calc, AddProduct, ContactUs, CreateCategory, CategoryList, CreateProduct, \
+from views import Index,  Calc, AddProduct, ContactUs, CreateCategory, CategoryList, CreateProduct, \
     AddProductCalculation
 #
 # routes = {

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}
+    История расчетов
+{% endblock %}
+
+{% block style %}
+    {% include "style_about.html" %}
+{% endblock %}
+
+
+{% block body %}
+<p class="step">История расчетов</p>
+<div class="history">
+ <table class="table basic_table table-striped table-responsive-xl table_log">
+        <tr>
+			<th rowspan="2" class="align">Дата</th>
+			<th rowspan="2" class="align">Заданные параметры <br>(калории/белки/жиры/углеводы)</th>
+			<th colspan="4" class="align">Полученные параметры</th>
+			<th rowspan="2" class="align">Просмотр</th>
+			<th rowspan="2" class="align">Копировать</th>
+		</tr>
+		<tr>
+			<th>Калории Гр</th>
+			<th>Жиры Гр</th>
+			<th>Белки Гр</th>
+			<th>Углеводы Гр</th>
+		</tr>
+        <tr>
+			<td style="white-space: nowrap">2022-04-24</td>
+			<td>2100/25/70/5</td>
+			<td>???</td>
+			<td>???</td>
+			<td>???</td>
+			<td>???</td>
+			<td><button class="btn btn-light">Просмотр</button></td>
+			<td><button class="btn btn-light">Копировать</button></td>
+		</tr>
+        <tr>
+			<td>2022-04-24</td>
+			<td>2100/25/70/5</td>
+			<td>???</td>
+			<td>???</td>
+			<td>???</td>
+			<td>???</td>
+			<td><button class="btn btn-light">Просмотр</button></td>
+			<td><button class="btn btn-light">Копировать</button></td>
+		</tr>
+	<tr>
+			<td>2022-04-24</td>
+			<td>2100/25/70/5</td>
+			<td>???</td>
+			<td>???</td>
+			<td>???</td>
+			<td>???</td>
+			<td><button class="btn btn-light">Просмотр</button></td>
+			<td><button class="btn btn-light">Копировать</button></td>
+		</tr>
+    </table>
+</div>
+
+{% endblock %}

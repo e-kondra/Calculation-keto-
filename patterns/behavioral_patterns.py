@@ -3,7 +3,7 @@ import jsonpickle as jsonpickle
 
 from templator import render
 
-
+# класс выполняет простейший рендеринг HTML-шаблона
 class TemplateView:
     template_name = 'template.html'
 
@@ -22,6 +22,7 @@ class TemplateView:
         return self.render_template_with_context()
 
 
+# класс для отображения списка записей
 class ListView(TemplateView):
     queryset = []
     template_name = 'list.html'

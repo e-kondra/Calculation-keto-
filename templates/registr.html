@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}
+    Добавить продукт
+{% endblock %}
+{% block style %}
+    {% include "style.html" %}
+{% endblock %}
+{% block menu %}
+    {% include "menu.html" %}
+{% endblock %}
+{% block body %}
+<body>
+<form method="post">
+    <div class="calc_input">
+        <label for="login">Введите логин</label>
+        <input maxlength="25" name="login" id="login" placeholder="admin">
+        <label for="password">Введите пароль</label>
+        <input type="password" name="password" id="password">
+    </div>
+    <button type="submit">Сохранить</button>
+</form>
+</body>
+{% endblock %}

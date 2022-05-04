@@ -32,5 +32,16 @@ VALUES (2, 1, 1, 'говяжья печень', 134, 0, 21.39, 1.23, 0);
 INSERT INTO product (id, category_id, is_active, name, kkal, water, proteins, fats, carbs)
 VALUES (3, 1, 1, 'свиная печень', 134, 0, 21.34, 3.7, 0);
 
+--
+DROP TABLE IF EXISTS user;
+CREATE TABLE user(
+    id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
+    name VARCHAR (64) UNIQUE ,
+    password VARCHAR (256),
+    isadmin INTEGER DEFAULT 0
+);
+
+INSERT INTO user (id, name, password, isadmin) VALUES (1, 'admin', 'd7c5ec9572423b16c3d142d2b703b524f66e4d7d24e443bb7486837ab23d88db', 1);
+
 COMMIT TRANSACTION;
 PRAGMA foreign_keys = on;

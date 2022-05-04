@@ -1,4 +1,5 @@
 import abc
+import hashlib
 import quopri
 import copy
 import sqlite3
@@ -10,16 +11,18 @@ from behavioral_patterns import Subject, DBWriter
 
 # абстрактный пользователь
 class User:
-    def __init__(self, name):
+    def __init__(self, name, password):
         self.name = name
+        self.password = password
 
 class Admin(User, Subject):
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self, name, password):
+        super().__init__(name, password)
+        self.is_admin = True
 
 class OrdinaryUser(User, Subject):
-    def __init__(self, name):
-        super().__init__(name)
+    def __init__(self, name, password):
+        super().__init__(name, password)
 
 
 # порождающий паттерн Абстрактная фабрика - фабрика пользователей
@@ -30,8 +33,8 @@ class UserFactory:
     }
     # порождающий паттерн Фабричный метод
     @classmethod
-    def create(cls, type_, name):
-        return cls.types[type_](name)
+    def create(cls, type_, name, password):
+        return cls.types[type_](name, password)
 
 
 class Category(DomainObject):
@@ -50,6 +53,7 @@ class Engine:
         self.calc_products = []
         self.calculations = []
         self.o_users = []
+        self.is_admin = False
 
     @staticmethod
     def create_user(type_, name):
@@ -252,6 +256,9 @@ class Product(DomainObject):
     carbs = {}
     vitamins = {}
 
+    def __eq__(self, other):
+        return self.__dict__ == other.__dict__
+
 
 class ProductBuilder:
     auto_id = 0
@@ -265,9 +272,9 @@ class ProductBuilder:
         self.product.carbs = {}
         self.product.vitamins = {}
 
-    def _build_mainparts(self, data, category): # основные показатели(калорийность, вода, холестирин, наименование, категория)
+    def _build_mainparts(self, data, category): # основные показатели(калорийность, вода, наименование, категория)
         print(f'category_build_mainparts = {category}')
-        self.product.id = int(data.get('id'))
+        # self.product.id = int(data.get('id'))
         self.product.name = Engine.decode_value(data['name'])
         self.product.kkal = int(data.get('kkal'))
         self.product.category = category
@@ -464,11 +471,36 @@ class ProductMapper:
         else:
             raise RecordNotFoundException(f'record with id={id} not found')
 
+
+class UserMapper:
+    def __init__(self, connection):
+        self.connection = connection
+        self.cursor = connection.cursor()
+        self.tablename = 'user'
+
+    def is_admin(self, id):
+        statement = f'SELECT isadmin FROM {self.tablename} WHERE id=?'
+        self.cursor.execute(statement, (id,))
+        result = self.cursor.fetchone()
+        return True if result == 1 else False
+
+    def check_password(self, login, pswd):
+        print(login)
+        statement = f'SELECT password FROM {self.tablename} WHERE name=?'
+        self.cursor.execute(statement, (login,))
+        result = self.cursor.fetchone()
+        print(result[0])
+        print(pswd)
+        return True if result[0] == pswd else False
+
+
+
 # архитектурный системный паттерн - Data Mapper
 class MapperRegistry:
     mappers = {
         'product': ProductMapper,
         'category': CategoryMapper,
+        'user': UserMapper,
     }
 
     @staticmethod
