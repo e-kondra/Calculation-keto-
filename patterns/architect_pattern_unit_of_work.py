@@ -24,6 +24,7 @@ class UnitOfWork:
     def register_dirty(self, obj):
         #self.dirty_objects.clear()
         self.dirty_objects.append(obj)
+        print(self.dirty_objects)
 
     def register_removed(self, obj):
         #self.removed_objects.clear()

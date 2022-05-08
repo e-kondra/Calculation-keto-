@@ -29,7 +29,6 @@ class ListView(TemplateView):
     context_object_name = 'object_list'
 
     def get_queryset(self):
-        print(self.queryset)
         return self.queryset
 
     def get_context_object_name(self):
@@ -37,7 +36,6 @@ class ListView(TemplateView):
 
     def get_context_data(self):
         queryset = self.get_queryset()
-        # print(f'queryset= {queryset}')
         context_object_name = self.get_context_object_name()
         context = {context_object_name: queryset}
         return context
@@ -70,6 +68,28 @@ class CreateView(TemplateView):
             self.create_obj(data)
 
             return self.render_template_with_context_post()
+        else:
+            return super().__call__(request)
+
+class UpdateView(TemplateView):
+    queryset = {}
+    template_name = 'create.html'
+    template_name_post = 'create_post.html'
+
+    @staticmethod
+    def get_request_data(request):
+        return request['data']
+
+    def update_obj(self, data):
+        pass
+
+    def __call__(self, request):
+        if request['method'] == 'POST':
+            # метод пост
+            data = self.get_request_data(request)
+            self.update_obj(data)
+
+            return self.render_template_with_context()
         else:
             return super().__call__(request)
 

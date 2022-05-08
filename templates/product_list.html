@@ -7,9 +7,11 @@
             <td>{{product.fats.fats}}</td>
             <td>{{product.carbs.carbs}}</td>
             <td><a href="/product_list/?product_id={{product.id}}" class="btn btn-light" type="button" style="text-decoration: none;">Добавить в расчет</a></td>
-            <td><input type="button" class="btn btn-light" value="Просмотр"></td>
+            <td><a href="/product_view/?product_id={{product.id}}" type="button" class="btn btn-light" style="text-decoration: none;">Просмотр</a></td>
+<!--            <td><input type="button" class="btn btn-light" value="Просмотр"></td>-->
             {% if is_admin %}
-            <td><input type="button" class="btn btn-light" value="Изменить"></td>
+            <td><a href="/product_update/?product_id={{product.id}}" type="button" class="btn btn-light" style="text-decoration: none;">Изменить</a></td>
+<!--            <td><input type="button" class="btn btn-light" value="Изменить"></td>-->
             {% endif %}
         </tr>
     {% endfor %}

@@ -1,6 +1,6 @@
 import hashlib
 
-from behavioral_patterns import ListView, CreateView, Subject, BaseSerializer, TemplateView
+from behavioral_patterns import ListView, CreateView, Subject, BaseSerializer, TemplateView, UpdateView
 from common_utils import make_hash
 from my_wsgi.templator import render
 from patterns.creating_patterns import Engine, Logger, MapperRegistry
@@ -47,11 +47,62 @@ class AddProduct:
             request_params = request['request_params']
             # print(request)
             category_list = MapperRegistry.get_current_mapper('category').all()
-            product_list = MapperRegistry.get_current_mapper('product').all()
+            if request_params.get('category_id', None):
+                # print(f'AddProduct. category_id = {int(request_params.get("category_id"))}')
+                product_list = MapperRegistry.get_current_mapper('product').filter(category=int(request_params['category_id']))
+            else:
+                product_list = MapperRegistry.get_current_mapper('product').filter(category=None)
             category_id = request_params.get('category_id')
             is_admin = engine.is_admin
             return '200 Ok', render('add_product.html', category_list = category_list, product_list=product_list, category_id=category_id, is_admin = is_admin)
 
+
+@AppRoute(routes=routes, url='/product_view/')
+class ProductView:
+    def __call__(self, request):
+        request_params = request['request_params']
+        product_id = int(request_params.get('product_id', None))
+        product = MapperRegistry.get_current_mapper('product').find_by_id(product_id)
+        category_list = MapperRegistry.get_current_mapper('category').all()
+        category = MapperRegistry.get_current_mapper('category').find_by_id(product.category)
+        return '200 Ok', render('product_view.html', prod=product, category_list=category_list, category=category)
+
+
+@AppRoute(routes=routes, url='/product_update/')
+class ProductUpdate(UpdateView):
+    product_id = None
+    product_name = ''
+
+    def __call__(self, request):
+        if request['method'] == 'GET':
+            request_params = request['request_params']
+            product_id = int(request_params.get('product_id', None))
+            self.product_id = product_id
+            product = MapperRegistry.get_current_mapper('product').find_by_id(product_id)
+            self.product_name = product.name
+            category_list = MapperRegistry.get_current_mapper('category').all()
+            category = MapperRegistry.get_current_mapper('category').find_by_id(product.category)
+            return '200 Ok', render('product_update.html', prod=product, category_list=category_list, category=category)
+        if request['method'] == 'POST':
+
+            data = request['data']
+            self.category = data.get('category_id')
+            self.category = engine.decode_value(self.category)
+            category_list = MapperRegistry.get_current_mapper('category').all()
+
+            category = None
+            if self.category:
+                category = MapperRegistry.get_current_mapper('category').find_id_by_name(self.category)
+
+            self.product_id = MapperRegistry.get_current_mapper('product').find_id_by_name(self.product_name)
+            product = MapperRegistry.get_current_mapper('product').find_by_id(self.product_id)
+            data['product_id'] = self.product_id
+            engine.update_product(product, data, category)
+
+            product.mark_dirty()
+            UnitOfWork.get_current().commit()
+            product = MapperRegistry.get_current_mapper('product').find_by_id(self.product_id)
+            return '200 Ok', render('product_update.html', prod=product, category_list=category_list, category=category)
 
 
 class NotFoundPage:
@@ -114,6 +165,8 @@ class CreateProduct(CreateView):
         context['category_list'] = MapperRegistry.get_current_mapper('category').all()
         context['product_list'] = MapperRegistry.get_current_mapper('product').all()
         context['category_id'] = self.category_id
+        context['is_admin'] = engine.is_admin
+        print(f'context from product = {context}')
         return context
 
     def create_obj(self, data):
@@ -165,7 +218,7 @@ class AddProductCalculation:
 class AdminAuthentication:
     def __call__(self, request):
         if request['method'] == 'GET':
-            return '200 OK', render('registr.html')
+            return '200 OK', render('admin.html')
         if request ['method'] == 'POST':
             data = request['data']
             login = 'admin'
@@ -175,11 +228,21 @@ class AdminAuthentication:
             if is_correct_pswd:
                 engine.is_admin = True
                 print(f'is_admin = {engine.is_admin}')
-                return '200 OK', render('index.html')
+                return '200 OK', render('calc.html', product_calc_list=engine.calc_products)
             else:
                 engine.is_admin = False
                 print('Авторизация не удалась')
-                return '200 OK', render('index.html')
+                return '200 OK', render('calc.html', product_calc_list=engine.calc_products)
+
+
+@AppRoute(routes=routes, url='/del_calc_prod/')
+class DelProductCalculation:
+    def __call__(self, request):
+        data = request.get('request_params')
+        prod = engine.find_calc_product_by_id(int(data['prod_id']))
+        engine.calc_products.remove(prod)
+        return '200 OK', render('calc.html', product_calc_list=engine.calc_products)
+
 
 @AppRoute(routes=routes, url='/api/')
 class CourseApi:

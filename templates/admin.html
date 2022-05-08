@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}
+   Администратор
+{% endblock %}
+
+{% block body %}
+
+{% block admin_style %}
+  {% include "style_admin.html" %}
+ {% endblock %}
+
+<!--  <form action="/calc/" method="post">-->
+<form method="post">
+          <p class="step">Введите пароль, чтобы получить права администратора</p>
+    <div class="pass">
+          <input type="password" id="password" name="password" placeholder="Пароль">
+    </div>
+
+          <div class="contact_button">
+                <input class="basic_button password" type="submit" value="Перейти к калькулятору">
+          </div>
+
+</form>
+
+{% endblock %}
