@@ -1,59 +1,71 @@
 {% extends "base.html" %}
 {% block title %}
-    Калькулятор
+    Калькулятор!
 {% endblock %}
+
 {% block style %}
-    {% include "style.html" %}
+    {% include "style_calc.html" %}
 {% endblock %}
-{% block menu %}
-    {% include "menu.html" %}
-{% endblock %}
+
+
 {% block body %}
-<body>
+<div class="calculator">
 <form action="" method="post">
-    <div class="calc_input">
-        <label for="kkal">Количество калорий</label>
-        <input type="number" name="kkal" value="2100" id="kkal">
+
+<p class="step">1. Укажите калорийность и макроэлементы в %:</p>
+    <div class="calc_input flexbox-container">
+        <div class="flexbox-item flexbox-item1">
+            <label for="kkal">Количество калорий</label><br>
+            <input type="number" name="kkal" value="2100" min="0" id="kkal">
+        </div>
+        <div class="flexbox-item flexbox-item2">
+            <label for="balt">Белки: </label><br>
+            <input type="number" name="balt" value="25" min="0" id="balt">
+        </div>
+        <div class="flexbox-item flexbox-item3">
+            <label for="fat">Жиры: </label><br>
+            <input type="number" name="fat" value="70" min="0" id="fat">
+        </div>
+        <div class="flexbox-item flexbox-item4">
+            <label for="ugl">Углеводы: </label><br>
+            <input type="number" name="ugl" value="5" min="0" id="ugl">
+        </div>
     </div>
-    <div class="calc_input">
-        <label>Укажите необходимое соотношение в %: </label>
-        <label for="balt">Белки: </label>
-        <input type="number" name="balt" value="25" id="balt">
-        <label for="fat">Жиры: </label>
-        <input type="number" name="fat" value="70" id="fat">
-        <label for="ugl">Углеводы: </label>
-        <input type="number" name="ugl" value="5" id="ugl">
-    </div>
-    <table class="table table_products">
-        <caption>Продукты для расчета:</caption>
+
+<p class="step">2. Добавить продукты в таблицу меню из заданных категорий: </p>
+<a class="basic_button btn" href="/add_product/">Выбрать продукты питания в таблицу</a>
+
+
+    <br>
+    <table class="table basic_table table-striped table-responsive-xl sel_prod">
         <tr class="head">
             <th>Наименование продукта</th>
             <th>Калории на 100гр/Ккал</th>
             <th>Белки на 100гр/Гр</th>
             <th>Жиры на 100гр/Гр</th>
             <th>Углеводы на 100гр/Гр</th>
-            <th></th>
+            <th>Удалить</th>
+            <th>Просмотр</th>
         </tr>
         {% for product in product_calc_list %}
-            <tr>
-                <td>{{product.name}}</td>
-                <td>{{product.kkal}}</td>
-                <td>{{product.proteins.proteins}}</td>
-                <td>{{product.fats.fats}}</td>
-                <td>{{product.carbs.carbs}}</td>
-                <td><input type="button" value="Удалить"></td>
-            </tr>
+        <tr>
+            <td>{{product.name}}</td>
+            <td>{{product.kkal}}</td>
+            <td>{{product.proteins.proteins}}</td>
+            <td>{{product.fats.fats}}</td>
+            <td>{{product.carbs.carbs}}</td>
+            <td><a type="button" class="btn btn-light" href="/del_calc_prod/?prod_id={{product.id}}">Удалить</a></td>
+            <td><input type="button" class="btn btn-light" value="Просмотр"></td>
+        </tr>
         {% endfor %}
-
     </table>
-    <a class="button button_violet" href="/add_product/">Добавить продукт в расчет</a>
-    <div>
-        <input id="calc" class="button_calc" type="submit" value="Рассчитать">
-    </div>
-</form>
-<form>
-    <table class="table table_results">
-        <caption>Результаты расчета на {{data}}:</caption>
+    <p class="step">3. Рассчитать результаты:</p>
+
+
+    <div id="calculate_results">
+        <input id="calc" class="basic_button" type="submit" value="Рассчитать">
+ <table class="table basic_table table-striped table-responsive-xl calc_res">
+        <!--<caption>Результаты расчета на {{data}}:</caption> -->
         <tr class="head">
             <th>Наименование продукта</th>
             <th>Калории Ккал</th>
@@ -72,47 +84,7 @@
                 <td>{{calc.weight}}</td>
             </tr>
             {% endfor %}
-<!--            <tr>-->
-<!--                <td>Лосось на гриле</td>-->
-<!--                <td>990.5</td>-->
-<!--                <td>72.45</td>-->
-<!--                <td>78.05</td>-->
-<!--                <td>2.1</td>-->
-<!--                <td>350</td>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <td>Творог 11%</td>-->
-<!--                <td>374</td>-->
-<!--                <td>35.2</td>-->
-<!--                <td>24.2</td>-->
-<!--                <td>2.2</td>-->
-<!--                <td>220</td>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <td>Сыр Маасдам</td>-->
-<!--                <td>525</td>-->
-<!--                <td>35.25</td>-->
-<!--                <td>39.0</td>-->
-<!--                <td>0.0</td>-->
-<!--                <td>150</td>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <td>Яйцо куриное вареное</td>-->
-<!--                <td>176</td>-->
-<!--                <td>14.19</td>-->
-<!--                <td>12.76</td>-->
-<!--                <td>0.88</td>-->
-<!--                <td>110</td>-->
-<!--            </tr>-->
-<!--            <tr>-->
-<!--                <td>Базилик свежий</td>-->
-<!--                <td>11.5</td>-->
-<!--                <td>1.575</td>-->
-<!--                <td>0.32</td>-->
-<!--                <td>1.025</td>-->
-<!--                <td>50</td>-->
-<!--            </tr>-->
-<!--            </tbody>-->
+            </tbody>
 <!--            <tfoot class="table_res">-->
 <!--            <tr>-->
 <!--                <td>Итого:</td>-->
@@ -124,6 +96,10 @@
 <!--            </tr>-->
 <!--            </tfoot>-->
     </table>
+    </div>
 </form>
-</body>
+
+</div>
+<br>
+
 {% endblock %}

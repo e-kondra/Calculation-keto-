@@ -85,10 +85,10 @@ class Engine:
 
     def update_product(self, product, data, category):
         upd_product = ProductUpdater(product)
-        print(f'upd_product = {upd_product}')
+        # print(f'upd_product = {upd_product}')
         product_builder = DirectProductBuild()
         product_builder.updater(upd_product, data, category)
-        print(upd_product.product.name, upd_product.product.kkal)
+        # print(upd_product.product.name, upd_product.product.kkal)
         # return upd_product.product
 
     # @staticmethod
@@ -215,7 +215,7 @@ class CalculationBuilder(Subject):
     def _build_results(self, data):
         x = self.calc.kkal / len(self.calc.products)
         for prod in self.calc.products:
-            print(prod.id, prod.name)
+            # print(prod.id, prod.name)
             result = {}
             result['product_id'] = prod.id
             result['name'] = prod.name
@@ -587,7 +587,7 @@ class ProductMapper(ItemMapper):
         self.column_list = list()
         self.column_list = self.get_column_list()
         super().__init__(connection, 'product')
-        print(self.column_list)
+        # print(self.column_list)
 
     def get_column_list(self):
         column_list = []
@@ -600,7 +600,7 @@ class ProductMapper(ItemMapper):
         self.cursor.execute(statement)
         result = []
         for item in self.cursor.fetchall():
-            print(item)
+            # print(item)
             # id, category_id, name, is_active, kkal, water, proteins, fats, carbs = item
 
             product = Product()
@@ -627,7 +627,7 @@ class ProductMapper(ItemMapper):
             result = []
             for item in self.cursor.fetchall():
                 id, category_id, name, is_active, kkal, water, proteins, fats, carbs = item
-                print(item)
+                # print(item)
                 product = Product()
                 product.id = id
                 product.category = category_id
@@ -700,7 +700,7 @@ class ProductMapper(ItemMapper):
         statement = f'SELECT id FROM {self.tablename} WHERE name=?'
         self.cursor.execute(statement, (name,))
         result = self.cursor.fetchone()
-        print(f'find_id_by_name.result = {result}')
+        # print(f'find_id_by_name.result = {result}')
         return result[0]
 
     def find_by_id(self, id):
@@ -739,13 +739,13 @@ class UserMapper:
         return True if result == 1 else False
 
     def check_password(self, login, pswd):
-        print(login)
+        # print(login)
         statement = f'SELECT password FROM {self.tablename} WHERE name=?'
         print(statement)
         self.cursor.execute(statement, (login,))
         result = self.cursor.fetchone()
-        print(result[0])
-        print(pswd)
+        # print(result[0])
+        # print(pswd)
         return True if result[0] == pswd else False
 
 

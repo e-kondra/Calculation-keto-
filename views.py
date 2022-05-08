@@ -124,6 +124,7 @@ class CreateCategory(CreateView):
         context = super().get_context_data()
         context['category_list'] = MapperRegistry.get_current_mapper('category').all()
         context['product_list'] = MapperRegistry.get_current_mapper('product').all()
+        context['is_admin'] = engine.is_admin
         return context
 
     def create_obj(self, data):
@@ -166,7 +167,7 @@ class CreateProduct(CreateView):
         context['product_list'] = MapperRegistry.get_current_mapper('product').all()
         context['category_id'] = self.category_id
         context['is_admin'] = engine.is_admin
-        print(f'context from product = {context}')
+        # print(f'context from product = {context}')
         return context
 
     def create_obj(self, data):
