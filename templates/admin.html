@@ -9,6 +9,10 @@
   {% include "style_admin.html" %}
  {% endblock %}
 
+{% if messages %}
+    {% include "messages.html" %}
+{% endif %}
+
 <!--  <form action="/calc/" method="post">-->
 <form method="post">
           <p class="step">Введите пароль, чтобы получить права администратора</p>

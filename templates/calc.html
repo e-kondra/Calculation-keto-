@@ -9,6 +9,10 @@
 
 
 {% block body %}
+
+{% if messages %}
+    {% include "messages.html" %}
+{% endif %}
 <div class="calculator">
 <form action="" method="post">
 

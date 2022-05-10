@@ -1,0 +1,76 @@
+<style>
+
+.message{
+    width: 100%;
+    margin: 0;
+
+}
+.info, .success, .warning, .error, .validation {
+    border: 1px solid;
+    margin: 10px 0px;
+    padding:15px 10px 15px 50px;
+    background-repeat: no-repeat;
+    background-position: 10px center;
+    width: 100%;
+}
+.info {
+color: #00529B;
+background-color: #BDE5F8;
+
+}
+.success {
+color: #4F8A10;
+background-color: #DFF2BF;
+
+}
+.warning {
+color: #9F6000;
+background-color: #FEEFB3;
+
+}
+.error {
+color: #D8000C;
+background-color: #FFBABA;
+
+}
+.validation {
+color: #D63301;
+background-color: #FFCCBA;
+
+}
+
+p {
+    font-size: 20px;
+    font-family: "Roboto", sans-serif;
+    font-weight: 400;
+    line-height: 23.5px;
+    text-align: center;
+}
+
+
+</style>
+<form>
+    <div class="message">
+        {% if messages.info %}
+        <div class="info">
+            <p>{{ messages.info }}</p>
+        </div>
+        {% endif %}
+        {% if messages.success %}
+        <div class="success">
+            <p>{{ messages.success }}</p>
+        </div>
+        {% endif %}
+        {% if messages.error %}
+        <div class="error">
+            <p>{{ messages.error }}</p>
+            </div>
+        {% endif %}
+        {% if messages.warning %}
+        <div class="warning">
+            <p>{{ messages.warning }}</p>
+        </div>
+        {% endif %}
+    </div>
+
+</form>

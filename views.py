@@ -29,12 +29,38 @@ class History:
 
 @AppRoute(routes=routes, url='/calc/')
 class Calc:
+    message = {}
+
+    def is_valid(self, data):
+        print(data)
+        errors = []
+        err = ''
+        if not data.get('kkal', None):
+            err = err + f'Fill the calories; \n'
+        if data.get('balt', None) == None:
+            err = err + f'Fill the amount of proteins; \n'
+        if data.get('fat', None) == None:
+            errors.append('Fill the amount of fats')
+            err = err + f'Fill the amount of fats; \n'
+        if data.get('ugl', None) == None:
+            err = err + f'Fill the amount of carbohydrates; \n'
+        if int(data.get('balt', 0)) + int(data.get('fats', 0)) + int(data.get('carbs', 0)) != 100:
+            err = err + f'Аmount of proteins, fats and carbohydrates should be 100%; \n'
+        if len(engine.calc_products) == 0:
+            err = err + f'Set of calculation products not filled'
+        self.message['error'] =err
+        return True if len(err) == 0 else False
+
     @Debug(name='Calc')
     def __call__(self, request):
         if request['method'] == 'POST':
             data = request.get('data', None)
-            calculation = engine.create_calculation(data)
-            return '200 Ok', render('calc.html', product_calc_list=engine.calc_products)
+            if not self.is_valid(data):
+                print(f'self.is_valid(data) = {self.is_valid(data)}')
+                # calculation = engine.create_calculation(data)
+                return '200 Ok', render('calc.html', messages=self.message)
+            else:
+                return '200 Ok', render('calc.html', product_calc_list=engine.calc_products)
         else:
             return '200 Ok', render('calc.html', product_calc_list=engine.calc_products)
 
@@ -229,11 +255,15 @@ class AdminAuthentication:
             if is_correct_pswd:
                 engine.is_admin = True
                 print(f'is_admin = {engine.is_admin}')
-                return '200 OK', render('calc.html', product_calc_list=engine.calc_products)
+                messages = {}
+                messages['success'] = 'authorization success'
+                return '200 OK', render('calc.html', product_calc_list=engine.calc_products, messages=messages)
             else:
                 engine.is_admin = False
+                messages = {}
+                messages['error'] = 'entered data is incorrect'
                 print('Авторизация не удалась')
-                return '200 OK', render('calc.html', product_calc_list=engine.calc_products)
+                return '200 OK', render('admin.html', messages=messages)
 
 
 @AppRoute(routes=routes, url='/del_calc_prod/')
