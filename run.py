@@ -2,13 +2,13 @@ from my_wsgi.main import MyFramework, DebugApplication
 from urls import fronts
 from wsgiref.simple_server import make_server
 from views import routes
-
+from components import  settings
 
 
 
 # class FakeApplication(MyFramework):
-#     def __init__(self, routes, fronts):
-#         self.application = MyFramework(routes, fronts)
+#     def __init__(self, routes, fronts, settings):
+#         self.application = MyFramework(routes, fronts, settings)
 #         super().__init__(routes,fronts)
 #
 #     @staticmethod
@@ -23,11 +23,11 @@ from views import routes
 #         start_response(code, [('Content-Type', 'text/html')])
 #         return body
 
-application = MyFramework(routes, fronts)
+application = MyFramework(routes, fronts, settings)
 
-# application = DebugApplication(routes, fronts)
+# application = DebugApplication(routes, fronts, settings)
 
-# application = FakeApplication(routes, fronts)
+# application = FakeApplication(routes, fronts, settings)
 
 with make_server('', 8080, application) as httpd:
     print("Запуск на порту 8080...")

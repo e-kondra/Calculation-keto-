@@ -173,7 +173,7 @@ class CreateCategory(CreateView):
 # контроллер - список категорий
 @AppRoute(routes=routes, url='/category_list/')
 class CategoryList(ListView):
-    # print('CategoryList(ListView)')
+
     def get_queryset(self):
         mapper = MapperRegistry.get_current_mapper('category')
         return mapper.all()

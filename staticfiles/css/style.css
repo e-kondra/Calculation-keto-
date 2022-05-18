@@ -1,4 +1,4 @@
-<style>
+
     .calc_input input[type=number] {
         width: 10%;
         padding: 12px 20px;
@@ -158,5 +158,3 @@
         background: linear-gradient(top, rgba(234, 234, 234, 1) 0%, rgba(242, 242, 242, 1) 100%);
         box-shadow: 0px -1px 1px #FFF inset, 0 0 0px 5px #E0E0E0;
     }
-
-</style>

@@ -1,5 +1,5 @@
- <!-- Basic style that applies to all pages -->
-    <style>
+ /*<!-- Basic style that applies to all pages -->*/
+
         body
         {
         font-family: "Garamond";
@@ -65,7 +65,7 @@
                 font-size: 15px;
                 text-align: center;
                 vertical-align: middle;
-                white-space: wrap;
+                white-space: pre-wrap;
                 }
 
             .step {
@@ -81,5 +81,3 @@
             align-items: center !important;
             justify-content: center !important;
             }
-
-    </style>

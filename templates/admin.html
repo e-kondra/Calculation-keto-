@@ -3,11 +3,14 @@
    Администратор
 {% endblock %}
 
+{% block style %}
+<link rel="stylesheet" href="{{ static }}css/style_admin.css">
+ {% endblock %}
+
 {% block body %}
 
-{% block admin_style %}
-  {% include "style_admin.html" %}
- {% endblock %}
+
+
 
 {% if messages %}
     {% include "messages.html" %}
