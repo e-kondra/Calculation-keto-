@@ -212,6 +212,25 @@ class CreateProduct(CreateView):
         UnitOfWork.get_current().commit()
 
 
+@AppRoute(routes=routes, url='/prod_list/')
+class ProductsList:
+    def __call__(self, request):
+        if request['method'] == 'GET': # push button Calc
+            request_params = request['request_params']
+            if request_params.get('category_id', None):
+                product_list = MapperRegistry.get_current_mapper('product').filter(category=int(request_params['category_id']), prod_name=None)
+            elif request_params.get('prod_name', None):
+                prod_name =  request_params.get('prod_name')
+                prod_name = engine.decode_value(prod_name)
+                product_list = MapperRegistry.get_current_mapper('product').filter(category=None, prod_name=prod_name)
+            else:
+                product_list = MapperRegistry.get_current_mapper('product').filter(category=None, prod_name=None)
+
+            is_admin = engine.is_admin
+
+            return '200 Ok', render('product_list.html', product_list=product_list, is_admin=is_admin)
+
+
 @AppRoute(routes=routes, url='/product_list/')
 class AddProductCalculation:
     def __call__(self, request):

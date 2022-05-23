@@ -619,31 +619,35 @@ class ProductMapper(ItemMapper):
         # print(f'result = {result}')
         return result
 
-    def filter(self, category=None):
-        # print(f'filter. category = {category}')
+    def filter(self, category=None, prod_name=None):
+        print(f'filter. category = {category} , prod_name = {prod_name}')
         if category:
             statement = f'SELECT id, category_id, name, is_active, kkal, water, proteins, fats, carbs FROM {self.tablename} WHERE category_id = ? AND is_active = 1'
             self.cursor.execute(statement, (category,))
-            result = []
-            for item in self.cursor.fetchall():
-                id, category_id, name, is_active, kkal, water, proteins, fats, carbs = item
-                # print(item)
-                product = Product()
-                product.id = id
-                product.category = category_id
-                product.name = name
-                product.kkal = kkal
-                product.water = water
-                product.proteins = {}
-                product.proteins['proteins'] = proteins
-                product.fats = {}
-                product.fats['fats'] = fats
-                product.carbs = {}
-                product.carbs['carbs'] = carbs
-                result.append(product)
-            return result
+        elif prod_name:
+            statement = f'SELECT id, category_id, name, is_active, kkal, water, proteins, fats, carbs FROM {self.tablename} WHERE name like "%{prod_name}%" AND is_active = 1'
+            self.cursor.execute(statement, )
         else:
             return self.all()
+        result = []
+        for item in self.cursor.fetchall():
+            id, category_id, name, is_active, kkal, water, proteins, fats, carbs = item
+            # print(item)
+            product = Product()
+            product.id = id
+            product.category = category_id
+            product.name = name
+            product.kkal = kkal
+            product.water = water
+            product.proteins = {}
+            product.proteins['proteins'] = proteins
+            product.fats = {}
+            product.fats['fats'] = fats
+            product.carbs = {}
+            product.carbs['carbs'] = carbs
+            result.append(product)
+        return result
+
 
     def get_cursor_tuple(self, obj):
         variables = obj.__dict__

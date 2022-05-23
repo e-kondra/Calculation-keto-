@@ -3,37 +3,36 @@
     <p class="step">Выберите категорию из списка</p>
     <div class="cat_options">
         <form class="select_cat" method="post">
+            <select class="basic_button category_select" id="category" name="category">
                 {% for category in category_list %}
-                <a href="/add_product/?category_id={{category.id}}">{{category.name}}</a>
+                    <option value="{{category.id}}">{{category.name}}</option>
                 {% endfor %}
-                <a href="/add_product/">все</a>
-<!--            <select class="basic_button" id="category" name="category" onchange="changedText(this.value);">-->
-<!--                    <option value="meat">Мясо</option>-->
-<!--                    <option value="fish">Рыбы</option>-->
-<!--                    <option value="vegetables">Овощи</option>-->
-<!--                    <option value="dairy">Молочный</option>-->
-<!--                    <option value="other">Другой</option>-->
-<!--            </select>-->
- </form>
-    {% if is_admin %}
-    <a href="/create_category/" class="basic_button" type="button" style="text-decoration: none;">Создать новую категорию </a>
-    {% endif %}
-    <!--From Bootstrap-->
-<!--<p>-->
-<!--  <button class="basic_button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">-->
-<!--    Создать новую категорию-->
-<!--  </button>-->
-<!--</p>-->
-<!--<div class="collapse" id="collapseExample">-->
-<!--  <div class="card card-body">-->
-<!--    <form method="post">-->
-<!--            <label class="step">Введите название новой категории:</label><br>-->
-<!--            <input class="new_cat_name" type="text" name="new_category_name" placeholder="Название"><br>-->
-<!--            <button class="basic_button" type="submit" id="submit_cat">Сохранить</button>-->
-<!--        </form>-->
-<!--          </div>-->
-<!--        </div>-->
+                    <option selected value="all">все</option>
+            </select>
+        </form>
+    </div>
 
+    {% if is_admin %}
+<!--    <a href="/create_category/" class="basic_button" type="button" style="text-decoration: none;">Создать новую категорию </a>-->
+<!--   -->
+<div class="create_category">
+    <p>
+        <button class="basic_button" type="button" data-bs-toggle="collapse" data-bs-target="#collapseExample" aria-expanded="false" aria-controls="collapseExample">
+        Создать новую категорию
+        </button>
+    </p>
+    <div class="collapse" id="collapseExample">
+      <div class="card card-body">
+        <form method="post">
+            <label class="step">Введите название новой категории:</label><br>
+            <input class="new_cat_name" type="text" name="new_category_name" placeholder="Название"><br>
+            <button class="basic_button" type="button" id="submit_cat" name="new_category_name_submit">Сохранить</button>
+<!--            <button class="basic_button" type="submit" id="submit_cat">Сохранить</button>-->
+        </form>
+      </div>
+    </div>
+</div>
+{% endif %}
 {% if is_admin %}
      <a href="/del_category/" class="basic_button" type="button" style="text-decoration: none;">Удалить категорию </a>
 {% endif %}
@@ -59,5 +58,4 @@
 <!--          </div>-->
 <!--        </div>-->
 
-    </div>
     </div>

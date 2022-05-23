@@ -4,7 +4,7 @@ BEGIN TRANSACTION;
 DROP TABLE IF EXISTS category;
 CREATE TABLE category(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
-    name VARCHAR (64)
+    name VARCHAR (64) UNIQUE
 );
 INSERT INTO category (id, name) VALUES (1, 'мясо');
 INSERT INTO category (id, name) VALUES (2, 'субпродукты');
