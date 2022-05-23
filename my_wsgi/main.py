@@ -61,6 +61,7 @@ class MyFramework:
             text = text.encode('utf-8')
         # static in context!
         elif path.startswith(self.settings.STATIC_URL):
+            print(self.settings.STATIC_URL)
             # /static/images/logo.jpg/ -> images/logo.jpg
             file_path = path[len(self.settings.STATIC_URL): len(path)-1]
             content_type = self.get_content_type(file_path)

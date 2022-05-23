@@ -1,17 +1,4 @@
-<div class="products_list">
-<table id="myInput" class="basic_table table-striped table-responsive-xl add_product">
-    <tr class="head">
-        <th>Наименование продукта</th>
-        <th>Калории на 100гр/Ккал</th>
-        <th>Белки на 100гр/Гр</th>
-        <th>Жиры на 100гр/Гр</th>
-        <th>Углеводы на 100гр/Гр</th>
-        <th>Добавить в расчет</th>
-        <th>Информация о продукте</th>
-        {% if is_admin %}
-        <th>Изменить продукт</th>
-        {% endif %}
-    </tr>
+<form>
     {% for product in product_list %}
         <tr>
             <td>{{product.name}}</td>
@@ -28,5 +15,4 @@
             {% endif %}
         </tr>
     {% endfor %}
-</table>
-</div>
+</form>
