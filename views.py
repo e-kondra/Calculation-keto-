@@ -86,6 +86,7 @@ class AddProduct:
 @AppRoute(routes=routes, url='/product_view/')
 class ProductView:
     def __call__(self, request):
+        print(f'ProductView = ',request['request_params'])
         request_params = request['request_params']
         product_id = int(request_params.get('product_id', None))
         product = MapperRegistry.get_current_mapper('product').find_by_id(product_id)
@@ -193,14 +194,12 @@ class CreateProduct(CreateView):
         context['product_list'] = MapperRegistry.get_current_mapper('product').all()
         context['category_id'] = self.category_id
         context['is_admin'] = engine.is_admin
-        # print(f'context from product = {context}')
         return context
 
     def create_obj(self, data):
         name = data['name']
         name = engine.decode_value(name)
         self.category_id = data.get('category_id')
-        print(f'create_obj. data = {data}')
         category = None
 
         if self.category_id:
@@ -218,13 +217,16 @@ class ProductsList:
         if request['method'] == 'GET': # push button Calc
             request_params = request['request_params']
             if request_params.get('category_id', None):
-                product_list = MapperRegistry.get_current_mapper('product').filter(category=int(request_params['category_id']), prod_name=None)
+                cat_id = request_params.get('category_id')
+                cat_id = engine.decode_value(cat_id)
+                if cat_id == 'все':
+                    product_list = MapperRegistry.get_current_mapper('product').filter(category=None, prod_name=None)
+                else:
+                    product_list = MapperRegistry.get_current_mapper('product').filter(category=int(cat_id), prod_name=None)
             elif request_params.get('prod_name', None):
                 prod_name =  request_params.get('prod_name')
                 prod_name = engine.decode_value(prod_name)
                 product_list = MapperRegistry.get_current_mapper('product').filter(category=None, prod_name=prod_name)
-            else:
-                product_list = MapperRegistry.get_current_mapper('product').filter(category=None, prod_name=None)
 
             is_admin = engine.is_admin
 

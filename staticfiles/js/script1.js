@@ -3,9 +3,9 @@ window.addEventListener("load", function(evt) {
     $('.category_select').on("change", (e)=>{
         $(document).on('change', '.category_select', (e) => {
             let t_href = e.target;
-            if (t_href.value == 'all'){
-                t_href.value = ''
-            }
+            // if (t_href.value == 'all'){
+            //     t_href.value = ''
+            // }
 
             $.ajax({
                 url: '/prod_list/?category_id=' + t_href.value,

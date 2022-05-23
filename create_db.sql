@@ -6,6 +6,7 @@ CREATE TABLE category(
     id INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL UNIQUE,
     name VARCHAR (64) UNIQUE
 );
+INSERT INTO category (id, name) VALUES (0, 'все');
 INSERT INTO category (id, name) VALUES (1, 'мясо');
 INSERT INTO category (id, name) VALUES (2, 'субпродукты');
 INSERT INTO category (id, name) VALUES (3, 'молочные продукты');

@@ -48,8 +48,7 @@
             <th>Белки на 100гр/Гр</th>
             <th>Жиры на 100гр/Гр</th>
             <th>Углеводы на 100гр/Гр</th>
-            <th>Удалить</th>
-            <th>Просмотр</th>
+            <th>Удалить из расчета</th>
         </tr>
         {% for product in product_calc_list %}
         <tr>
@@ -59,7 +58,7 @@
             <td>{{product.fats.fats}}</td>
             <td>{{product.carbs.carbs}}</td>
             <td><a type="button" class="btn btn-light" href="/del_calc_prod/?prod_id={{product.id}}">Удалить</a></td>
-            <td><input type="button" class="btn btn-light" value="Просмотр"></td>
+<!--            <td><a type="button" class="btn btn-light" href="/product_view/?product_id={{product.id}}">Просмотр</a></td>-->
         </tr>
         {% endfor %}
     </table>
