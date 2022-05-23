@@ -3,15 +3,11 @@ window.addEventListener("load", function(evt) {
     $('.category_select').on("change", (e)=>{
         $(document).on('change', '.category_select', (e) => {
             let t_href = e.target;
-            // if (t_href.value == 'all'){
-            //     t_href.value = ''
-            // }
 
             $.ajax({
                 url: '/prod_list/?category_id=' + t_href.value,
                 success: function(data){
                     if (data){
-                        // console.log(data);
                         $(".products_list").html(data)
                     }
                 },
@@ -28,7 +24,6 @@ window.addEventListener("load", function(evt) {
                 url: '/prod_list/?prod_name=' + t_href.value,
                 success: function(data){
                     if (data){
-                        console.log(data);
                         $(".products_list").html(data)
                     }
                 },
