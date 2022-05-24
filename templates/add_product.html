@@ -7,7 +7,7 @@
 
 {% block body %}
 {% block category_style %}
-<link rel="stylesheet" href="{{ static }}css/style_category_list.css">
+<link rel="stylesheet" href="staticfiles/css/style_category_list.css">
 {% endblock %}
 
 <body>
@@ -22,7 +22,7 @@
             {% include "product_list.html" %}
 
             {% if is_admin %}
-                <a class="basic_button btn" href="/product/?category_id={{category_id}}">Добавить новый продукт</a>
+                <a class="basic_button btn" href="product?category_id={{category_id}}">Добавить новый продукт</a>
             {% endif %}
 
         </form>

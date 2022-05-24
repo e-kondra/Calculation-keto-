@@ -1,11 +1,14 @@
+import os
+from wsgiref.simple_server import make_server
+from wsgi_static_middleware import StaticMiddleware # класс-конструктор Middleware(тут подключаем статику)
+
+from views import routes
 from my_wsgi.main import MyFramework, DebugApplication
 from urls import fronts
-from wsgiref.simple_server import make_server
-from views import routes
-from components import  settings
 
 
-
+ROOT_DIR = os.path.dirname(__name__)
+STATIC_DIRS = [os.path.join(ROOT_DIR, 'staticfiles')]
 # class FakeApplication(MyFramework):
 #     def __init__(self, routes, fronts, settings):
 #         self.application = MyFramework(routes, fronts, settings)
@@ -23,13 +26,16 @@ from components import  settings
 #         start_response(code, [('Content-Type', 'text/html')])
 #         return body
 
-application = MyFramework(routes, fronts, settings)
+application = MyFramework(routes, fronts)
+app_static = StaticMiddleware(application,
+                              static_root='staticfiles',
+                              static_dirs=STATIC_DIRS)
 
 # application = DebugApplication(routes, fronts, settings)
 
 # application = FakeApplication(routes, fronts, settings)
 
-with make_server('', 8080, application) as httpd:
+with make_server('', 8080, app_static) as httpd:
     print("Запуск на порту 8080...")
     httpd.serve_forever()
 

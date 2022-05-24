@@ -4,7 +4,7 @@
 {% endblock %}
 
 {% block style %}
-    <link rel="stylesheet" href="{{ static }}css/style_calc.css">
+    <link rel="stylesheet" href="staticfiles/css/style_calc.css">
 {% endblock %}
 
 
@@ -37,7 +37,7 @@
     </div>
 
 <p class="step">2. Добавить продукты в таблицу меню из заданных категорий: </p>
-<a class="basic_button btn" href="/add_product/">Выбрать продукты питания в таблицу</a>
+<a class="basic_button btn" href="add_product">Выбрать продукты питания в таблицу</a>
 
 
     <br>
@@ -57,7 +57,7 @@
             <td>{{product.proteins.proteins}}</td>
             <td>{{product.fats.fats}}</td>
             <td>{{product.carbs.carbs}}</td>
-            <td><a type="button" class="btn btn-light" href="/del_calc_prod/?prod_id={{product.id}}">Удалить</a></td>
+            <td><a type="button" class="btn btn-light" href="del_calc_prod?prod_id={{product.id}}">Удалить</a></td>
 <!--            <td><a type="button" class="btn btn-light" href="/product_view/?product_id={{product.id}}">Просмотр</a></td>-->
         </tr>
         {% endfor %}
@@ -88,16 +88,6 @@
             </tr>
             {% endfor %}
             </tbody>
-<!--            <tfoot class="table_res">-->
-<!--            <tr>-->
-<!--                <td>Итого:</td>-->
-<!--                <td>2077</td>-->
-<!--                <td>158.665</td>-->
-<!--                <td>154.33</td>-->
-<!--                <td>6.205</td>-->
-<!--                <td>880</td>-->
-<!--            </tr>-->
-<!--            </tfoot>-->
     </table>
     </div>
 </form>

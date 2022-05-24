@@ -10,6 +10,10 @@ from behavioral_patterns import Subject, DBWriter
 
 
 # абстрактный пользователь
+from universal_mapper import ItemMapper, RecordNotFoundException, DbCommitException, DbUpdateException, \
+    DbDeleteException
+
+
 class User:
     def __init__(self, name, password):
         self.name = name
@@ -426,81 +430,21 @@ class ProductUpdater(ProductBuilder):
         self.product = product
 
 
-class ItemMapper:
-    classes = {
-        'categories': Category,
-        'products': Product,
-        'calculation': Calculation
-    }
 
-    def __init__(self, connection, tablename):
-        self.connection = connection
-        self.cursor = connection.cursor()
-        self.tablename = tablename
-        self.column_list = self.get_column_list()
-
-    def get_column_list(self):
-        for row in self.connection.execute(f"pragma table_info('{self.tablename}')").fetchall():
-            self.column_list.append(row[1])
-
-    def get_cursor_tuple(self, obj):
-        if obj.cursor_tuple:
-            return obj.cursor_tuple
-        else:
-            variables = obj.__dict__
-            cursor_list = []
-            for item in self.column_list[1:]:
-                cursor_list.append(variables.get(item, None))
-            cursor_tuple = tuple(cursor_list)
-            return cursor_tuple
-
-    def insert(self, obj):
-        # формируем список колонок в таблице
-        column_str = str(self.column_list[1:])
-        column_str = column_str.replace("'", "").replace('[', '(').replace(']', ')')
-        # список из вопросов
-        questions_str = '?,' * len(self.column_list[1:])
-        questions_str = questions_str[:-1]
-
-        cursor_tuple = self.get_cursor_tuple(obj)
-
-        statement = f'INSERT INTO {self.tablename} {column_str} VALUES ({questions_str})'
-        self.cursor.execute(statement, cursor_tuple)
-
-        try:
-            self.connection.commit()
-        except Exception as e:
-            raise DbCommitException(e.args)
-
-    def get_update_values_str(self, obj):
-
-        obj_dict = copy.deepcopy(obj.__dict__)
-        name_value = ''
-        for item in self.column_list[1:]:
-            value = obj_dict.get(item,None)
-            name_value = name_value + f', {item}={value}' if len(name_value) > 0 else f'{item}={value}'
-        name_value = name_value.replace('None', 'NULL')
-        item_id = int(obj_dict.get('product_id'))
-
-        return name_value, item_id
-
-    def update(self, obj):
-        name_value, item_id = self.get_update_values_str(obj)
-
-        statement = f"UPDATE {self.tablename} SET {name_value} WHERE id=?"
-
-        self.cursor.execute(statement, (item_id,))
-        try:
-            self.connection.commit()
-        except Exception as e:
-            raise DbUpdateException(e.args)
-
-class CategoryMapper:
+class CategoryMapper(ItemMapper):
+    tablename = 'category'
+    model = Category
 
     def __init__(self, connection):
         self.connection = connection
         self.cursor = connection.cursor()
-        self.tablename = 'category'
+        self.column_list = list()
+        self.column_list = self.get_column_list()
+        super().__init__(connection)
+
+    def get_column_list(self):
+        for row in self.connection.execute(f"pragma table_info('{self.tablename}')").fetchall():
+            self.column_list.append(row[1])
 
     def all(self):
         statement = f'SELECT * FROM {self.tablename}'
@@ -508,31 +452,17 @@ class CategoryMapper:
         result = []
         for item in self.cursor.fetchall():
             id, name = item
-            category = Category(name)
+            category = self.model(name)
             category.id = id
             result.append(category)
         return result
-
-    def find_by_id(self, id):
-        statement = f'SELECT id, name FROM {self.tablename} WHERE id=?'
-        self.cursor.execute(statement, (id,))
-        result = self.cursor.fetchone()
-        if result:
-            return Category(result[1])
-        else:
-            raise RecordNotFoundException(f'record with id={id} not found')
-
-    def find_id_by_name(self, name):
-        statement = f'SELECT id FROM {self.tablename} WHERE name=?'
-        self.cursor.execute(statement, (name,))
-        return self.cursor.fetchone()[0]
 
     def find_by_name(self, name):
         statement = f'SELECT id, name FROM {self.tablename} WHERE name=?'
         self.cursor.execute(statement, (name,))
         result = self.cursor.fetchone()
         if result:
-            return Category(result[1])
+            return self.model(result[1])
         else:
             return None
 
@@ -544,49 +474,22 @@ class CategoryMapper:
         except Exception as e:
             raise DbCommitException(e.args)
 
-    def get_update_values_str(self, obj):
-        name_value = ''
-        obj_dict = copy.deepcopy(obj.__dict__)
-        for item in self.column_list[1:]:
-            value = obj_dict.get(item, None)
-            name_value = name_value + f', {item}={value}' if len(name_value) > 0 else f'{item}={value}'
-        name_value = name_value.replace('None', 'NULL')
-        obj_id = obj_dict.get('id', None)
-        return name_value, obj_id
-
-    def update(self, obj):
-        name_value, obj_id = self.get_update_values_str(obj)
-
-        statement = f"UPDATE {self.tablename} SET {name_value} WHERE id=?"
-
-        self.cursor.execute(statement, (obj_id,))
-        try:
-            self.connection.commit()
-        except Exception as e:
-            raise DbUpdateException(e.args)
-
-    def delete(self, obj):
-        statement = f'DELETE FROM {self.tablename} WHERE id=?'
-        self.cursor.execute(statement, (obj.id,))
-        try:
-            self.connection.commit()
-        except Exception as e:
-            raise DbDeleteException(e.args)
-
 
 connection = sqlite3.connect('calc.sqlite3')
 
 
 class ProductMapper(ItemMapper):
+    tablename = 'product'
+    model = Product
 
     def __init__(self, connection):
-
+        #
         self.connection = connection
         self.cursor = connection.cursor()
-        self.tablename = 'product'
+        # self.tablename = 'product'
         self.column_list = list()
         self.column_list = self.get_column_list()
-        super().__init__(connection, 'product')
+        super().__init__(connection)
         # print(self.column_list)
 
     def get_column_list(self):
@@ -600,8 +503,6 @@ class ProductMapper(ItemMapper):
         self.cursor.execute(statement)
         result = []
         for item in self.cursor.fetchall():
-            # print(item)
-            # id, category_id, name, is_active, kkal, water, proteins, fats, carbs = item
 
             product = Product()
             product.id = item[0]
@@ -700,13 +601,6 @@ class ProductMapper(ItemMapper):
 
         return name_value, item_id
 
-    def find_id_by_name(self, name):
-        statement = f'SELECT id FROM {self.tablename} WHERE name=?'
-        self.cursor.execute(statement, (name,))
-        result = self.cursor.fetchone()
-        # print(f'find_id_by_name.result = {result}')
-        return result[0]
-
     def find_by_id(self, id):
         column_str = str(self.column_list)
         column_str = column_str.replace("'", "").replace('[', '').replace(']', '')
@@ -774,21 +668,3 @@ class MapperRegistry:
         return MapperRegistry.mappers[name](connection)
 
 
-class RecordNotFoundException(Exception):
-    def __init__(self, message):
-        super().__init__(f'Record not found: {message}')
-
-
-class DbCommitException(Exception):
-    def __init__(self, message):
-        super().__init__(f'Db commit error: {message}')
-
-
-class DbUpdateException(Exception):
-    def __init__(self, message):
-        super().__init__(f'Db update error: {message}')
-
-
-class DbDeleteException(Exception):
-    def __init__(self, message):
-        super().__init__(f'Db delete error: {message}')

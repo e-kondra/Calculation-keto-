@@ -3,7 +3,7 @@
     Добавить продукт
 {% endblock %}
 {% block style %}
-    <link rel="stylesheet" href="{{ static }}css/style_product.css">
+    <link rel="stylesheet" href="staticfiles/css/style_product.css">
 {% endblock %}
 {% block body %}
 <body>
@@ -347,7 +347,7 @@
  </div>
         <div class="new-product-buttons">
         <button class="basic_button btn" type="submit">Сохранить</button>
-        <a class="basic_button btn" href="/add_product/">Вернуться к выбору продуктов</a>
+        <a class="basic_button btn" href="add_product">Вернуться к выбору продуктов</a>
         </div>
     </form>
 </body>

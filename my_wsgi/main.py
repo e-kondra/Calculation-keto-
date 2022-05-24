@@ -1,11 +1,7 @@
 """Main application of wsgi"""
-import ntpath
 import quopri
-from os import path
-from pprint import pprint
 
 from wsgi_requests import GetRequest, PostRequest
-from components.content_types import CONTENT_TYPES_MAP
 
 
 
@@ -29,18 +25,23 @@ class DebugLog:
 
 class MyFramework:
     """Main Framework's callable class"""
-    def __init__(self, routes, fronts, settings):
+
+    def __init__(self, routes, fronts):
         self.routes = routes
         self.fronts = fronts
-        self.settings = settings
-
 
     def __call__(self, environ, start_response):
         path = environ['PATH_INFO']
 
-        # necessarily add closing tag
         if not path.endswith('/'):
             path = f'{path}/'
+
+        # necessarily add closing tag
+        if path in self.routes:
+            view = self.routes[path]
+        else:
+            view = NotFoundPage()
+
         request = {}
         #
         method = environ['REQUEST_METHOD']
@@ -49,50 +50,16 @@ class MyFramework:
         if method == 'POST':
             data = PostRequest().get_request_params(environ)
             request['data'] = data
-            # print(f'POST-запрос: {MyFramework.decode_value(data)}')
         if method == 'GET':
             parameters = GetRequest().get_request_params(environ)
             request['request_params'] = parameters
-
-        if path in self.routes:
-            view = self.routes[path]
-            content_type = self.get_content_type(path)
-            code, text = view(request)
-            text = text.encode('utf-8')
-        # static in context!
-        elif path.startswith(self.settings.STATIC_URL):
-            print(self.settings.STATIC_URL)
-            # /static/images/logo.jpg/ -> images/logo.jpg
-            file_path = path[len(self.settings.STATIC_URL): len(path)-1]
-            content_type = self.get_content_type(file_path)
-            code, text = self.get_static(self.settings.STATIC_FILES_DIR, file_path)
-
-        else:
-            view = NotFoundPage()
-            content_type = self.get_content_type(path)
-            code, text = view(request)
-            text = text.encode('utf-8')
-
+        # rendering of pattern Front Controller
         for front in self.fronts:
             front(request)
 
-        start_response(code, [('Content_Type', content_type)])
-        return [text]
-
-    @staticmethod
-    def get_content_type(file_path, content_types_map=CONTENT_TYPES_MAP):
-        file_name = path.basename(file_path).lower()
-        extension = path.splitext(file_name)[1]
-        return content_types_map.get(extension, "text/html")
-        pass
-
-    @staticmethod
-    def get_static(static_dir, file_path):
-        path_to_file = path.join(static_dir, file_path)
-        with open(path_to_file, 'rb') as f:
-            file_content = f.read()
-        status_code = '200 OK'
-        return status_code, file_content
+        code, text = view(request)
+        start_response(code, [('Content_Type', 'text/html')])
+        return [text.encode('utf-8')]
 
     @staticmethod
     def decode_value(data):
