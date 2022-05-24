@@ -55,7 +55,7 @@ class MyFramework:
             request['request_params'] = parameters
         # rendering of pattern Front Controller
         for front in self.fronts:
-            front(request)
+            front(environ, request)
 
         code, text = view(request)
         start_response(code, [('Content_Type', 'text/html')])

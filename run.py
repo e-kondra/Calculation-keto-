@@ -4,7 +4,7 @@ from wsgi_static_middleware import StaticMiddleware # класс-констру�
 
 from views import routes
 from my_wsgi.main import MyFramework, DebugApplication
-from urls import fronts
+from front_controllers import fronts
 
 
 ROOT_DIR = os.path.dirname(__name__)

@@ -18,7 +18,7 @@ routes = {}
 class Index:
     @Debug(name='Index')
     def __call__(self, request):
-        return '200 OK', render('index.html')
+        return '200 OK', render('index.html', geo=request.get('geo', None))
 
 @AppRoute(routes=routes, url='/history/')
 class History:
