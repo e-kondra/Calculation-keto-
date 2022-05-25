@@ -207,13 +207,11 @@ class CalculationBuilder(Subject):
     def _build_mainparts(self, data):
         self.calc.date_calc = date.today()
         self.calc.kkal = int(data.get('kkal'))
-        # todo. Добавить проверку на сумму б/ж/у = 100% и заполненность полей
         self.calc.bzu['balt'] = float(data.get('balt'))
         self.calc.bzu['fat'] = float(data.get('fat'))
         self.calc.bzu['ugl'] = float(data.get('ugl'))
 
     def _build_products(self, prod_list):
-        # todo. Добавить проверку на количество/качество введенных продуктов
         self.calc.products = copy.deepcopy(prod_list)
 
     def _build_results(self, data):

@@ -1,29 +1,35 @@
-
-def parse_input_data(data: str):
-    """converting a string into a dict"""
-    # str like '127.0.0.1:8080?id=1&category=10'
-    result = {}
-    if data:
-        params = data.split('&')
-        for item in params:
-            # делим ключ и значение через =
-            k, v = item.split('=')
-            result[k] = v
-    return result
+from abc import ABCMeta, abstractmethod
 
 
-
-class GetRequest:
-
+class Requests(metaclass=ABCMeta):
     @staticmethod
-    def get_request_params(environ):
+    def parse_input_data(data: str):
+        """converting a string into a dict"""
+        # str like '127.0.0.1:8080?id=1&category=10'
+        result = {}
+        if data:
+            params = data.split('&')
+            for item in params:
+                # делим ключ и значение через =
+                k, v = item.split('=')
+                result[k] = v
+        return result
+
+    @abstractmethod
+    def get_request_params(self, environ):
+        pass
+
+class GetRequest(Requests):
+    dict_value = 'request_params'
+
+    def get_request_params(self, environ):
         str = environ['QUERY_STRING']
-        request_dict = parse_input_data(str)
-        return request_dict
+        get_params = GetRequest.parse_input_data(str)
+        return get_params
 
 
-class PostRequest:
-
+class PostRequest(Requests):
+    dict_value = 'data'
     @staticmethod
     def get_wsgi_input_data(environ) -> bytes:
         length_data = environ.get('CONTENT_LENGTH')
@@ -35,10 +41,17 @@ class PostRequest:
         result_dict = {}
         if data:
             str = data.decode(encoding='utf-8')
-            result_dict = parse_input_data(str)
+            result_dict = self.parse_input_data(str)
         return result_dict
 
     def get_request_params(self, environ):
         data = self.get_wsgi_input_data(environ)
-        request_dict = self.parse_wsgi_input_data(data)
-        return request_dict
+        data = self.parse_wsgi_input_data(data)
+        return data
+
+
+class GetRequestClass():
+    req = {
+        'POST': PostRequest(),
+        'GET': GetRequest(),
+    }

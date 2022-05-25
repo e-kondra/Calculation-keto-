@@ -1,8 +1,7 @@
 """Main application of wsgi"""
 import quopri
 
-from wsgi_requests import GetRequest, PostRequest
-
+from wsgi_requests import GetRequest, PostRequest, GetRequestClass
 
 
 class NotFoundPage:
@@ -43,17 +42,14 @@ class MyFramework:
             view = NotFoundPage()
 
         request = {}
-        #
         method = environ['REQUEST_METHOD']
         request['method'] = method
 
-        if method == 'POST':
-            data = PostRequest().get_request_params(environ)
-            request['data'] = data
-        if method == 'GET':
-            parameters = GetRequest().get_request_params(environ)
-            request['request_params'] = parameters
-        # rendering of pattern Front Controller
+        method_class = GetRequestClass.req[method]
+        data = method_class.get_request_params(environ)
+        request[method_class.dict_value] = MyFramework.decode_value(data)
+
+        # rendering of pattern Front
         for front in self.fronts:
             front(environ, request)
 
@@ -74,9 +70,9 @@ class MyFramework:
 # logging wsgi-application + decorator(just for homework)
 class DebugApplication(MyFramework):
 
-    def __init__(self, routes, fronts, settings):
-        self.application = MyFramework(routes, fronts, settings)
-        super().__init__(routes, fronts, settings)
+    def __init__(self, routes, fronts):
+        self.application = MyFramework(routes, fronts)
+        super().__init__(routes, fronts)
 
     @DebugLog()
     def __call__(self, env, start_response):
