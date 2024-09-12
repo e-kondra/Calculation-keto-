@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}
+    Добавить продукт
+{% endblock %}
+{% block style %}
+    {% include "style.html" %}
+{% endblock %}
+{% block menu %}
+    {% include "menu.html" %}
+{% endblock %}
+{% block body %}
+<body>
+    {% include "category_list.html" %}
+    <div>
+        <form>
+        <table class="table table_products">
+        <caption>Выберите продукт:</caption>
+        <tr class="head">
+            <th>Наименование продукта</th>
+            <th>Калории на 100гр/Ккал</th>
+            <th>Белки на 100гр/Гр</th>
+            <th>Жиры на 100гр/Гр</th>
+            <th>Углеводы на 100гр/Гр</th>
+            <th></th>
+        </tr>
+        {% include "product_list.html" %}
+        </table>
+        <a href="/product/?category_id={{category_id}}">Добавить новый продукт</a>
+        </form>
+    </div>
+</body>
+{% endblock %}
