@@ -1,0 +1,129 @@
+{% extends "base.html" %}
+{% block title %}
+    Калькулятор
+{% endblock %}
+{% block style %}
+    {% include "style.html" %}
+{% endblock %}
+{% block menu %}
+    {% include "menu.html" %}
+{% endblock %}
+{% block body %}
+<body>
+<form action="" method="post">
+    <div class="calc_input">
+        <label for="kkal">Количество калорий</label>
+        <input type="number" name="kkal" value="2100" id="kkal">
+    </div>
+    <div class="calc_input">
+        <label>Укажите необходимое соотношение в %: </label>
+        <label for="balt">Белки: </label>
+        <input type="number" name="balt" value="25" id="balt">
+        <label for="fat">Жиры: </label>
+        <input type="number" name="fat" value="70" id="fat">
+        <label for="ugl">Углеводы: </label>
+        <input type="number" name="ugl" value="5" id="ugl">
+    </div>
+    <table class="table table_products">
+        <caption>Продукты для расчета:</caption>
+        <tr class="head">
+            <th>Наименование продукта</th>
+            <th>Калории на 100гр/Ккал</th>
+            <th>Белки на 100гр/Гр</th>
+            <th>Жиры на 100гр/Гр</th>
+            <th>Углеводы на 100гр/Гр</th>
+            <th></th>
+        </tr>
+        {% for product in product_calc_list %}
+            <tr>
+                <td>{{product.name}}</td>
+                <td>{{product.kkal}}</td>
+                <td>{{product.proteins.proteins}}</td>
+                <td>{{product.fats.fats}}</td>
+                <td>{{product.carbs.carbs}}</td>
+                <td><input type="button" value="Удалить"></td>
+            </tr>
+        {% endfor %}
+
+    </table>
+    <a class="button button_violet" href="/add_product/">Добавить продукт в расчет</a>
+    <div>
+        <input id="calc" class="button_calc" type="submit" value="Рассчитать">
+    </div>
+</form>
+<form>
+    <table class="table table_results">
+        <caption>Результаты расчета на {{data}}:</caption>
+        <tr class="head">
+            <th>Наименование продукта</th>
+            <th>Калории Ккал</th>
+            <th>Белки Гр</th>
+            <th>Жиры Гр</th>
+            <th>Углеводы Гр</th>
+            <th>Необходимое количество Гр</th>
+            <tbody>
+            {% for calc in calc_list%}
+                <tr>
+                <td>{{calc.name}}</td>
+                <td>{{calc.kkal}}</td>
+                <td>{{calc.proteins}}</td>
+                <td>{{calc.fats}}</td>
+                <td>{{calc.carbs}}</td>
+                <td>{{calc.weight}}</td>
+            </tr>
+            {% endfor %}
+<!--            <tr>-->
+<!--                <td>Лосось на гриле</td>-->
+<!--                <td>990.5</td>-->
+<!--                <td>72.45</td>-->
+<!--                <td>78.05</td>-->
+<!--                <td>2.1</td>-->
+<!--                <td>350</td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <td>Творог 11%</td>-->
+<!--                <td>374</td>-->
+<!--                <td>35.2</td>-->
+<!--                <td>24.2</td>-->
+<!--                <td>2.2</td>-->
+<!--                <td>220</td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <td>Сыр Маасдам</td>-->
+<!--                <td>525</td>-->
+<!--                <td>35.25</td>-->
+<!--                <td>39.0</td>-->
+<!--                <td>0.0</td>-->
+<!--                <td>150</td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <td>Яйцо куриное вареное</td>-->
+<!--                <td>176</td>-->
+<!--                <td>14.19</td>-->
+<!--                <td>12.76</td>-->
+<!--                <td>0.88</td>-->
+<!--                <td>110</td>-->
+<!--            </tr>-->
+<!--            <tr>-->
+<!--                <td>Базилик свежий</td>-->
+<!--                <td>11.5</td>-->
+<!--                <td>1.575</td>-->
+<!--                <td>0.32</td>-->
+<!--                <td>1.025</td>-->
+<!--                <td>50</td>-->
+<!--            </tr>-->
+<!--            </tbody>-->
+<!--            <tfoot class="table_res">-->
+<!--            <tr>-->
+<!--                <td>Итого:</td>-->
+<!--                <td>2077</td>-->
+<!--                <td>158.665</td>-->
+<!--                <td>154.33</td>-->
+<!--                <td>6.205</td>-->
+<!--                <td>880</td>-->
+<!--            </tr>-->
+<!--            </tfoot>-->
+    </table>
+</form>
+</body>
+{% endblock %}

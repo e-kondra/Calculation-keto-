@@ -1,0 +1,355 @@
+{% extends "base.html" %}
+{% block title %}
+    Добавить продукт
+{% endblock %}
+{% block style %}
+    {% include "style_product.html" %}
+{% endblock %}
+{% block body %}
+<body>
+    <form method="post">
+
+        <p class="step">Информация о продукте:</p>
+
+ <div class="grid-container">
+     <div class="grid-item grid-item1">
+
+<!--         <label class="basic_info"><h3 class="title">Новый продукт</h3></label>-->
+
+         <div class="basic_parameters">
+            <label for="name">Название продукта</label>
+            <input type="text" id="name" name="name" value="{{prod.name}}" required="required">
+
+            <label for="kkal">Калорийность 100гр</label>
+            <input type="number" step="1" id="kkal" name="kkal" min="0" value="{{prod.kkal}}" required="required">
+
+            <label for="category_id">Категория</label>
+            <select id="category_id" name="category_id" >
+                {% for cat in category_list %}
+<!--                <option selected="{{prod.category.id}}" value={{prod.category.id}}>{{prod.category.name}}</option>-->
+                    {%if category.name != cat.name %}
+                        <option value="{{cat.name}}">{{cat.name}}</option>
+                    {% else %}
+                        <option selected="{{cat.name}}" value="{{cat.name}}">{{cat.name}}</option>
+                    {% endif %}
+
+                {% endfor %}}
+            </select>
+
+             </div>
+     </div>
+
+     <div class="grid-item grid-item2">
+         <label><h3 class="title">Белки</h3></label>
+         <div>
+                <label for="proteins"><span>Содержание белка в 100 гр</span></label>
+                <input type="number" step="0.01" id="proteins" name="proteins" required="required" min="0" value="{{prod.proteins.proteins}}"><br>
+                <label for="tryptophan">Триптофан</label>
+                <input type="number" step="0.001" id="tryptophan" name="tryptophan" min="0" value="{{prod.proteins.tryptophan}}"><br>
+                <label for="threonine">Треонин</label>
+                <input type="number" step="0.001" id="threonine" name="threonine" min="0" value="{{prod.proteins.threonine}}"><br>
+                <label for="isoleucine">Изолейцин</label>
+                <input type="number" step="0.001" id="isoleucine" name="isoleucine" min="0" value="{{prod.proteins.isoleucine}}"><br>
+                <label for="leucine">Лейцин</label>
+                <input type="number" step="0.001" id="leucine" name="leucine" min="0" value="{{prod.proteins.leucine}}"><br>
+                <label for="lysine">Лизин</label>
+                <input type="number" step="0.001" id="lysine" name="lysine" min="0" value="{{prod.proteins.lysine}}"><br>
+                <label for="methionine">Метионин</label>
+                <input type="number" step="0.001" id="methionine" name="methionine" min="0" value="{{prod.proteins.methionine}}"><br>
+                <label for="cystine">Цистин</label>
+                <input type="number" step="0.001" id="cystine" name="cystine" min="0" value="{{prod.proteins.cystine}}"><br>
+                <label for="phenylalanine">Фенилаланин</label>
+                <input type="number" step="0.001" id="phenylalanine" name="phenylalanine" min="0" value="{{prod.proteins.phenylalanine}}"><br>
+                <label for="tyrosine">Тирозин</label>
+                <input type="number" step="0.001" id="tyrosine" name="tyrosine" min="0" value="{{prod.proteins.tyrosine}}"><br>
+                <label for="valine">Валин</label>
+                <input type="number" step="0.001" id="valine" name="valine" min="0" value="{{prod.proteins.valine}}"><br>
+                <label for="arginine">Аргинин</label>
+                <input type="number" step="0.001" id="arginine" name="arginine" min="0" value="{{prod.proteins.arginine}}"><br>
+                <label for="histidine">Гистидин</label>
+                <input type="number" step="0.001" id="histidine" name="histidine" min="0" value="{{prod.proteins.histidine}}"><br>
+                <label for="alanine">Аланин</label>
+                <input type="number" step="0.001" id="alanine" name="alanine" min="0" value="{{prod.proteins.alanine}}"><br>
+                <label for="aspartic">Аспарагиновая кислота</label>
+                <input type="number" step="0.001" id="aspartic" name="aspartic" min="0" value="{{prod.proteins.aspartic}}"><br>
+                <label for="glutamic">Глутаминовая кислота</label>
+                <input type="number" step="0.001" id="glutamic" name="glutamic" min="0" value="{{prod.proteins.glutamic}}"><br>
+                <label for="glycine">Глицин</label>
+                <input type="number" step="0.001" id="glycine" name="glycine" min="0" value="{{prod.proteins.glycine}}"><br>
+                <label for="proline">Пролин</label>
+                <input type="number" step="0.001" id="proline" name="proline" min="0" value="{{prod.proteins.proline}}"><br>
+                <label for="serine">Серин</label>
+                <input type="number" step="0.001" id="serine" name="serine" min="0" value="{{prod.proteins.serine}}"><br>
+             </div>
+     </div>
+     <div class="grid-item grid-item3">
+         <label><h3 class="title">Жиры</h3></label>
+            <div>
+                <label for="fats"><span>Содержание жиров в 100 гр</span></label>
+                <input type="number" step="0.01" id="fats" name="fats" required="required" min="0" value="{{prod.fats.fats}}"><br>
+
+                <label for="saturated">Насыщенные жирные кислоты</label>
+                <input type="number" step="0.001" id="saturated" name="saturated" min="0" value="{{prod.fats.saturated}}"><br>
+
+                <label for="butyric">Масляная кислота</label>
+                <input type="number" step="0.001" id="butyric" name="butyric" min="0" value="{{prod.fats.butyric}}"><br>
+
+                <label for="caproic">Капроновая кислота</label>
+                <input type="number" step="0.001" id="caproic" name="caproic" min="0" value="{{prod.fats.caproic}}"><br>
+
+                <label for="caprylic">Каприловая кислота</label>
+                <input type="number" step="0.001" id="caprylic" name="caprylic" min="0" value="{{prod.fats.caprylic}}"><br>
+
+                <label for="capric">Каприновая кислота</label>
+                <input type="number" step="0.001" id="capric" name="capric" min="0" value="{{prod.fats.capric}}"><br>
+
+<!--                <label for="capric">Каприновая кислота</label>-->
+<!--                <input type="number" step="0.001" id="capric" name="capric" placeholder="Каприновая кислота гр"><br>-->
+
+                <label for="lauric">Лауриновая кислота </label>
+                <input type="number" step="0.001" id="lauric" name="lauric" min="0" value="{{prod.fats.lauric}}"><br>
+
+                <label for="myristic">Миристиновая кислота</label>
+                <input type="number" step="0.001" id="myristic" name="myristic" min="0" value="{{prod.fats.myristic}}"><br>
+
+                <label for="palmitic">Пальмитиновая кислота</label>
+                <input type="number" step="0.001" id="palmitic" name="palmitic" min="0" value="{{prod.fats.palmitic}}"><br>
+
+                <label for="stearic">Стеариновая кислота</label>
+                <input type="number" step="0.001" id="stearic" name="stearic" min="0" value="{{prod.fats.stearic}}"><br>
+
+                <label for="arachinoic">Арахиновая кислота</label>
+                <input type="number" step="0.001" id="arachinoic" name="arachinoic" min="0" value="{{prod.fats.arachinoic}}"><br>
+
+                <label for="behenic">Бегеновая кислота</label>
+                <input type="number" step="0.001" id="behenic" name="behenic" min="0" value="{{prod.fats.behenic}}"><br>
+
+                <label for="lignoceric">Лигноцериновая кислота</label>
+                <input type="number" step="0.001" id="lignoceric" name="lignoceric" min="0" value="{{prod.fats.lignoceric}}"><br>
+
+                <label for="monounsaturated">Мононенасыщенные жирные кислоты</label>
+                <input type="number" step="0.001" id="monounsaturated" name="monounsaturated" min="0" value="{{prod.fats.monounsaturated}}"><br>
+
+                <label for="palmitoleic">Пальмитолеиновая кислота</label>
+                <input type="number" step="0.001" id="palmitoleic" name="palmitoleic" min="0" value="{{prod.fats.palmitoleic}}"><br>
+
+                <label for="oleic">Олеиновая кислота</label>
+                <input type="number" step="0.001" id="oleic" name="oleic" min="0" value="{{prod.fats.oleic}}"><br>
+
+                <label for="gadolin">Гадолиновая кислота</label>
+                <input type="number" step="0.001" id="gadolin" name="gadolin" min="0" value="{{prod.fats.gadolin}}"><br>
+
+                <label for="erucic">Эруковая кислота</label>
+                <input type="number" step="0.001" id="erucic" name="erucic" min="0" value="{{prod.fats.erucic}}"><br>
+
+                <label for="nervonic">Нервоновая кислота</label>
+                <input type="number" step="0.001" id="nervonic" name="nervonic" min="0" value="{{prod.fats.nervonic}}"><br>
+
+                <label for="polyunsaturated">Полиненасыщенные жирные кислоты</label>
+                <input type="number" step="0.001" id="polyunsaturated" name="polyunsaturated" min="0" value="{{prod.fats.polyunsaturated}}"><br>
+
+                <label for="linoleic">Линолевая кислота</label>
+                <input type="number" step="0.001" id="linoleic" name="linoleic" min="0" value="{{prod.fats.linoleic}}"><br>
+
+                <label for="linolenic">Линоленовая кислота</label>
+                <input type="number" step="0.001" id="linolenic" name="linolenic" min="0" value="{{prod.fats.linolenic}}"><br>
+
+                <label for="alpha_linolenic">Альфа-линоленовая кислота</label>
+                <input type="number" step="0.001" id="alpha_linolenic" name="alpha_linolenic" min="0" value="{{prod.fats.alpha_linolenic}}"><br>
+
+                <label for="gamma_linolenic">Гамма-линоленовая кислота</label>
+                <input type="number" step="0.001" id="gamma_linolenic" name="gamma_linolenic" min="0" value="{{prod.fats.gamma_linolenic}}"><br>
+
+                <label for="eicosadiene">Эйкозадиеновая кислота</label>
+                <input type="number" step="0.001" id="eicosadiene" name="eicosadiene" min="0" value="{{prod.fats.eicosadiene}}"><br>
+
+                <label for="arachidonic">Арахидоновая кислота</label>
+                <input type="number" step="0.001" id="arachidonic" name="arachidonic" min="0" value="{{prod.fats.arachidonic}}"><br>
+
+                <label for="eicosapentaenoic">Тимнодоновая кислота</label>
+                <input type="number" step="0.001" id="eicosapentaenoic" name="eicosapentaenoic" min="0" value="{{prod.fats.eicosapentaenoic}}"><br>
+
+                <label for="docosapentaenoic">Докозапентаеновая кислота</label>
+                <input type="number" step="0.001" id="docosapentaenoic" name="docosapentaenoic" min="0" value="{{prod.fats.docosapentaenoic}}"><br>
+
+                <label for="sterol">Стеролы</label>
+                <input type="number" step="0.001" id="sterol" name="sterol" min="0" value="{{prod.fats.sterol}}"><br>
+
+                <label for="cholesterol">Холестерин</label>
+                <input type="number" step="0.001" id="cholesterol" name="cholesterol" min="0" value="{{prod.fats.cholesterol}}"><br>
+
+                <label for="phytosterols">Фитостерины</label>
+                <input type="number" step="0.001" id="phytosterols" name="phytosterols" min="0" value="{{prod.fats.phytosterols}}"><br>
+
+                <label for="stigmasterol">Стигмастерол</label>
+                <input type="number" step="0.001" id="stigmasterol" name="stigmasterol" min="0" value="{{prod.fats.phytosterols}}"><br>
+
+                <label for="campesterol">Кампестерол</label>
+                <input type="number" step="0.001" id="campesterol" name="campesterol" min="0" value="{{prod.fats.stigmasterol}}"><br>
+
+                <label for="beta_sitosterol">Бета-ситостерин</label>
+                <input type="number" step="0.001" id="beta_sitosterol" name="beta_sitosterol" min="0" value="{{prod.fats.beta_sitosterol}}"><br>
+
+                <label for="trans">Трансжиры</label>
+                <input type="number" step="0.001" id="trans" name="trans" min="0" value="{{prod.fats.trans}}"><br>
+
+                <label for="mono_trans">Трансжиры (моноеновые)</label>
+                <input type="number" step="0.001" id="mono_trans" name="mono_trans" min="0" value="{{prod.fats.mono_trans}}"><br>
+
+                <label for="poly_trans"> Трансжиры (полиеновые)</label>
+                <input type="number" step="0.001" id="poly_trans" name="poly_trans" min="0" value="{{prod.fats.poly_trans}}"><br>
+
+            </div>
+     </div>
+     <div class="grid-item grid-item4">
+         <label><h3 class="title">Углеводы</h3></label>
+            <div>
+            <div>
+                <label for="carbs"><span>Содержание углеводов в 100 гр</span></label>
+                <input type="number" step="0.01" id="carbs" name="carbs" required="required" min="0" value="{{prod.carbs.carbs}}"><br>
+                </div>
+                <label><em>Моносахариды</em></label> <br>
+                <div class="grid">
+                    <label for="glucose">Глюкоза</label>
+                    <input type="number" step="0.01" id="glucose" name="glucose" min="0" value="{{prod.carbs.glucose}}"><br>
+                    <label for="fructose">Фруктоза</label>
+                    <input type="number" step="0.01" id="fructose" name="fructose" min="0" value="{{prod.carbs.fructose}}"><br>
+                    <label for="galactose">Галактоза</label>
+                    <input type="number" step="0.01" id="galactose" name="galactose" min="0" value="{{prod.carbs.galactose}}"><br>
+                </div>
+                <label><em>Дисахариды</em></label><br>
+                <div class="grid">
+                    <label for="sucrose">Сахароза</label>
+                    <input type="number" step="0.01" id="sucrose" name="sucrose" min="0" value="{{prod.carbs.sucrose}}"><br>
+                    <label for="lactose">Лактоза</label>
+                    <input type="number" step="0.01" id="lactose" name="lactose" min="0" value="{{prod.carbs.lactose}}"><br>
+                    <label for="maltose">Мальтоза</label>
+                    <input type="number" step="0.01" id="maltose" name="maltose" min="0" value="{{prod.carbs.maltose}}"><br>
+                </div>
+                <div class="grid">
+                    <label for="sum_sugar"><em>Всего сахаров:</em></label><br>
+                    <input type="number" step="0.01" id="sum_sugar" name="sum_sugar" min="0" value="{{prod.carbs.sum_sugar}}"><br>
+                </div>
+                <label><em>Полисахариды</em></label><br>
+                <div class="grid">
+                    <label for="fiber">Клетчатка</label>
+                    <input type="number" step="0.01" id="fiber" name="fiber" min="0" value="{{prod.carbs.fiber}}"><br>
+                    <label for="starch">Крахмал</label>
+                    <input type="number" step="0.01" id="starch" name="starch" min="0" value="{{prod.carbs.starch}}"><br>
+            </div>
+        </div>
+     </div>
+     <div class="grid-item grid-item5">
+         <label><h3 class="title">Витамины</h3></label><br>
+            <div>
+                <label for="vitA">Витамин А</label>
+                <input type="number" step="0.01" id="vitA" name="vitA" min="0" value="{{prod.vitamins.vitA}}"><br>
+
+                <label for="beta_carotene">Бета-каротин</label>
+                <input type="number" step="0.01" id="beta_carotene" name="beta_carotene" min="0" value="{{prod.vitamins.beta_carotene}}"><br>
+
+                <label for="alpha_carotene">Альфа-каротин</label>
+                <input type="number" step="0.01" id="alpha_carotene" name="alpha_carotene" min="0" value="{{prod.vitamins.alpha_carotene}}"><br>
+
+                <label for="vitD">Витамин D</label>
+                <input type="number" step="0.01" id="vitD" name="vitD" min="0" value="{{prod.vitamins.vitD}}"><br>
+
+                <label for="vitD2">Витамин D2</label>
+                <input type="number" step="0.01" id="vitD2" name="vitD2" min="0" value="{{prod.vitamins.vitD2}}"><br>
+
+                <label for="vitD3">Витамин D3</label>
+                <input type="number" step="0.01" id="vitD3" name="vitD3" min="0" value="{{prod.vitamins.vitD3}}"><br>
+
+                <label for="vitE">Витамин E</label>
+                <input type="number" step="0.01" id="vitE" name="vitE" min="0" value="{{prod.vitamins.vitE}}"><br>
+
+                <label for="vitC">Витамин C</label>
+                <input type="number" step="0.01" id="vitC" name="vitC" min="0" value="{{prod.vitamins.vitC}}"><br>
+
+                <label for="vitB1">Витамин B1</label>
+                <input type="number" step="0.01" id="vitB1" name="vitB1" min="0" value="{{prod.vitamins.vitB1}}"><br>
+
+                <label for="vitB2">Витамин B2</label>
+                <input type="number" step="0.01" id="vitB2" name="vitB2" min="0" value="{{prod.vitamins.vitB2}}"><br>
+
+                <label for="vitB3">Витамин B3</label>
+                <input type="number" step="0.01" id="vitB3" name="vitB3" min="0" value="{{prod.vitamins.vitB3}}"><br>
+
+                <label for="vitB4">Витамин B4</label>
+                <input type="number" step="0.01" id="vitB4" name="vitB4" min="0" value="{{prod.vitamins.vitB4}}"><br>
+
+                <label for="vitB5">Витамин B5</label>
+                <input type="number" step="0.01" id="vitB5" name="vitB5" min="0" value="{{prod.vitamins.vitB5}}"><br>
+
+                <label for="vitB6">Витамин B6</label>
+                <input type="number" step="0.01" id="vitB6" name="vitB6" min="0" value="{{prod.vitamins.vitB6}}"><br>
+
+                <label for="vitB9">Витамин B9</label>
+                <input type="number" step="0.01" id="vitB9" name="vitB9" min="0" value="{{prod.vitamins.vitB9}}"><br>
+
+                <label for="vitB12">Витамин B12</label>
+                <input type="number" step="0.01" id="vitB12" name="vitB12" min="0" value="{{prod.vitamins.vitB12}}"><br>
+            </div>
+     </div>
+
+     <div class="grid-item grid-item6">
+         <label><h3 class="title">Микроэлементы</h3></label><br>
+          <div>
+            <label for="Ca">Кальций</label>
+            <input type="number" step="0.01" id="Ca" name="Ca" min="0" value="{{prod.microelements.Ca}}"><br>
+
+            <label for="Fe">Железо</label>
+            <input type="number" step="0.01" id="Fe" name="Fe" min="0" value="{{prod.microelements.Fe}}"><br>
+
+            <label for="Mg">Магний</label>
+            <input type="number" step="0.01" id="Mg" name="Mg" min="0" value="{{prod.microelements.Mg}}"><br>
+
+            <label for="Phos">Фосфор</label>
+            <input type="number" step="0.01" id="Phos" name="Phos" min="0" value="{{prod.microelements.Phos}}"><br>
+
+            <label for="Kalis">Калий</label>
+            <input type="number" step="0.01" id="Kalis" name="Kalis" min="0" value="{{prod.microelements.Kalis}}"><br>
+
+<!--            <label for="Ca">Кальций</label>-->
+<!--            <input type="number" step="0.01" id="Ca" name="Ca" placeholder="Кальций мкг"><br>-->
+
+            <label for="Na">Натрий</label>
+            <input type="number" step="0.01" id="Na" name="Na" min="0" value="{{prod.microelements.Na}}"><br>
+
+            <label for="Zn">Цинк</label>
+            <input type="number" step="0.01" id="Zn" name="Zn" min="0" value="{{prod.microelements.Zn}}"><br>
+
+            <label for="Cu">Медь</label>
+            <input type="number" step="0.01" id="Cu" name="Cu" min="0" value="{{prod.microelements.Cu}}"><br>
+
+            <label for="Mn">Марганец</label>
+            <input type="number" step="0.01" id="Mn" name="Mn" min="0" value="{{prod.microelements.Mn}}"><br>
+
+            <label for="Se">Селен</label>
+            <input type="number" step="0.01" id="Se" name="Se" min="0" value="{{prod.microelements.Se}}"><br>
+
+            <label for="Fluor">Фтор</label>
+            <input type="number" step="0.01" id="Fluor" name="Fluor" min="0" value="{{prod.microelements.Fluor}}"><br>
+
+          </div>
+     </div>
+     <div class="grid-item grid-item7">
+         <label class="title"><h3>Другие параметры</h3></label><br>
+            <div>
+                <label for="water">Вода</label>
+                <input type="number" step="1" id="water" name="water" min="0" placeholder="Вода г"><br>
+
+                <label for="ash">Зола</label>
+                <input type="number" step="0.01" id="ash" name="ash" min="0" placeholder="Зола"><br>
+
+        </div>
+     </div>
+ </div>
+        <div class="new-product-buttons">
+        <button class="basic_button btn" type="submit">Сохранить</button>
+        <a class="basic_button btn" href="/add_product/">Вернуться к выбору продуктов</a>
+        </div>
+    </form>
+</body>
+{% endblock %}
+

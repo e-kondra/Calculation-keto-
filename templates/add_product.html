@@ -1,0 +1,100 @@
+{% extends "base.html" %}
+{% block title %}
+    Добавить продукт
+{% endblock %}
+
+
+{% block body %}
+{% block category_style %}
+    {% include "style_category_list.html"%}
+{% endblock %}
+
+<body>
+    {% include "category_list.html" %}
+    <div>
+        <form class="add_to_calculator">
+
+<!--            <input type="text" class="search_product" id="search_product"  placeholder="Поиск продуктов...">-->
+
+           <table id="myInput" class="basic_table table-striped table-responsive-xl add_product">
+
+        <tr class="head">
+            <th>Наименование продукта</th>
+            <th>Калории на 100гр/Ккал</th>
+            <th>Белки на 100гр/Гр</th>
+            <th>Жиры на 100гр/Гр</th>
+            <th>Углеводы на 100гр/Гр</th>
+            <th>Добавить в расчет</th>
+            <th>Информация о продукте</th>
+            {% if is_admin %}
+            <th>Изменить продукт</th>
+            {% endif %}
+        </tr>
+           {% include "product_list.html" %}
+        </table>
+        {% if is_admin %}
+            <a class="basic_button btn" href="/product/?category_id={{category_id}}">Добавить новый продукт</a>
+        {% endif %}
+
+<!--        <tr>-->
+<!--            <td>Яйцо куриное вареное</td>-->
+<!--            <td>160</td>-->
+<!--            <td>12.9</td>-->
+<!--            <td>11.6</td>-->
+<!--            <td>0.8</td>-->
+<!--            <td><input type="button" class="btn btn-light" value="Добавить"></td>-->
+<!--            <td><input type="button" class="btn btn-light" value="Пересмотр"></td>-->
+<!--            <td><input type="button" class="btn btn-light" value="Изменить"</td>-->
+<!--        </tr>-->
+<!--             <tr>-->
+<!--            <td>Лосось на гриле</td>-->
+<!--            <td>283</td>-->
+<!--            <td>20.7</td>-->
+<!--            <td>22.3</td>-->
+<!--            <td>0.6</td>-->
+<!--            <td><input type="button" class="btn btn-light" value="Добавить"></td>-->
+<!--            <td><input type="button" class="btn btn-light" value="Пересмотр"></td>-->
+<!--            <td><input type="button" class="btn btn-light" value="Изменить"</td>-->
+<!--        </tr>-->
+<!--             <tr>-->
+<!--            <td>Базилик свежий</td>-->
+<!--            <td>23</td>-->
+<!--            <td>3.15</td>-->
+<!--            <td>0.64</td>-->
+<!--            <td>1.05</td>-->
+<!--            <td><input type="button" class="btn btn-light" value="Добавить"></td>-->
+<!--            <td><input type="button" class="btn btn-light" value="Пересмотр"></td>-->
+<!--            <td><input type="button" class="btn btn-light" value="Изменить"</td>-->
+<!--        </tr>-->
+<!--             <tr>-->
+<!--            <td>Творог 11%</td>-->
+<!--            <td>170</td>-->
+<!--            <td>16.0</td>-->
+<!--            <td>11.0</td>-->
+<!--            <td>1.0</td>-->
+<!--            <td><input type="button" class="btn btn-light" value="Добавить"></td>-->
+<!--            <td><input type="button" class="btn btn-light" value="Пересмотр"></td>-->
+<!--            <td><input type="button" class="btn btn-light" value="Изменить"</td>-->
+<!--        </tr>-->
+<!--        <tr>-->
+<!--            <td>Сыр Маасдам</td>-->
+<!--            <td>350</td>-->
+<!--            <td>23.5</td>-->
+<!--            <td>26.0</td>-->
+<!--            <td>0.0</td>-->
+<!--            <td><input type="button" class="btn btn-light" value="Добавить"></td>-->
+<!--            <td><input type="button" class="btn btn-light" value="Пересмотр"></td>-->
+<!--            <td><input type="button" class="btn btn-light" value="Изменить"</td>-->
+<!--        </tr>-->
+<!--        </table>-->
+
+
+<!--        <a class="basic_button btn" href="/product/">Добавить новый продукт</a>-->
+<!--      </div>-->
+        </form>
+    </div>
+
+
+</body>
+
+{% endblock %}

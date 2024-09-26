@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}
+    Калькулятор!
+{% endblock %}
+
+{% block style %}
+    {% include "style_calc.html" %}
+{% endblock %}
+
+
+{% block body %}
+<div class="calculator">
+<form action="" method="post">
+
+<p class="step">1. Укажите калорийность и макроэлементы в %:</p>
+    <div class="calc_input flexbox-container">
+        <div class="flexbox-item flexbox-item1">
+            <label for="kkal">Количество калорий</label><br>
+            <input type="number" name="kkal" value="2100" min="0" id="kkal">
+        </div>
+        <div class="flexbox-item flexbox-item2">
+            <label for="balt">Белки: </label><br>
+            <input type="number" name="balt" value="25" min="0" id="balt">
+        </div>
+        <div class="flexbox-item flexbox-item3">
+            <label for="fat">Жиры: </label><br>
+            <input type="number" name="fat" value="70" min="0" id="fat">
+        </div>
+        <div class="flexbox-item flexbox-item4">
+            <label for="ugl">Углеводы: </label><br>
+            <input type="number" name="ugl" value="5" min="0" id="ugl">
+        </div>
+    </div>
+
+<p class="step">2. Добавить продукты в таблицу меню из заданных категорий: </p>
+<a class="basic_button btn" href="/add_product/">Выбрать продукты питания в таблицу</a>
+
+
+    <br>
+    <table class="table basic_table table-striped table-responsive-xl sel_prod">
+        <tr class="head">
+            <th>Наименование продукта</th>
+            <th>Калории на 100гр/Ккал</th>
+            <th>Белки на 100гр/Гр</th>
+            <th>Жиры на 100гр/Гр</th>
+            <th>Углеводы на 100гр/Гр</th>
+            <th>Удалить</th>
+            <th>Просмотр</th>
+        </tr>
+        {% for product in product_calc_list %}
+        <tr>
+            <td>{{product.name}}</td>
+            <td>{{product.kkal}}</td>
+            <td>{{product.proteins.proteins}}</td>
+            <td>{{product.fats.fats}}</td>
+            <td>{{product.carbs.carbs}}</td>
+            <td><a type="button" class="btn btn-light" href="/del_calc_prod/?prod_id={{product.id}}">Удалить</a></td>
+            <td><input type="button" class="btn btn-light" value="Просмотр"></td>
+        </tr>
+        {% endfor %}
+    </table>
+    <p class="step">3. Рассчитать результаты:</p>
+
+
+    <div id="calculate_results">
+        <input id="calc" class="basic_button" type="submit" value="Рассчитать">
+ <table class="table basic_table table-striped table-responsive-xl calc_res">
+        <!--<caption>Результаты расчета на {{data}}:</caption> -->
+        <tr class="head">
+            <th>Наименование продукта</th>
+            <th>Калории Ккал</th>
+            <th>Белки Гр</th>
+            <th>Жиры Гр</th>
+            <th>Углеводы Гр</th>
+            <th>Необходимое количество Гр</th>
+            <tbody>
+            {% for calc in calc_list%}
+                <tr>
+                <td>{{calc.name}}</td>
+                <td>{{calc.kkal}}</td>
+                <td>{{calc.proteins}}</td>
+                <td>{{calc.fats}}</td>
+                <td>{{calc.carbs}}</td>
+                <td>{{calc.weight}}</td>
+            </tr>
+            {% endfor %}
+            </tbody>
+<!--            <tfoot class="table_res">-->
+<!--            <tr>-->
+<!--                <td>Итого:</td>-->
+<!--                <td>2077</td>-->
+<!--                <td>158.665</td>-->
+<!--                <td>154.33</td>-->
+<!--                <td>6.205</td>-->
+<!--                <td>880</td>-->
+<!--            </tr>-->
+<!--            </tfoot>-->
+    </table>
+    </div>
+</form>
+
+</div>
+<br>
+
+{% endblock %}

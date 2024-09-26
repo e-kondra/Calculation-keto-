@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}
+    Обратная связь
+{% endblock %}
+{% block style %}
+    {% include "style_contact.html" %}
+{% endblock %}
+
+{% block body %}
+<body>
+<div>
+  <form action="" method="post">
+      <p class="step">Связаться с нами</p>
+      <fieldset>
+
+          <label for="fname">Имя<span class="required">*</span></label>
+          <input type="text" id="fname" name="firstname" placeholder="Имя...">
+
+          <label for="lname">Фамилия<span class="required">*</span></label>
+          <input type="text" id="lname" name="lastname" placeholder="Фамилия...">
+
+          <label for="email">Электронная почта<span class="required">*</span></label>
+          <input type="text" id="email" name="email" placeholder="Электронная почта...">
+
+    <br>
+    <label for="subject">Сообщение<span class="required">*</span></label>
+    <textarea class="subject" id="subject" name="subject" placeholder="Сообщение..." style="height:200px"></textarea>
+    <br>
+
+          <p>Все поля с <span class="required">*</span> обязательны для заполнения</p>
+          <div class="contact_button">
+            <input class="basic_button contact" type="submit" value="Отправить сообщение">
+          </div>
+      </fieldset>
+
+  </form>
+</div>
+
+</body>
+{% endblock %}
