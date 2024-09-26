@@ -1,0 +1,13 @@
+<form>
+    {% for product in product_list %}
+        <tr>
+            <td>{{product.name}}</td>
+            <td>{{product.kkal}}</td>
+            <td>{{product.proteins.proteins}}</td>
+            <td>{{product.fats.fats}}</td>
+            <td>{{product.carbs.carbs}}</td>
+            <td><a href="/product_list/?product_id={{product.id}}" class="button">Добавить в расчет</a>
+            </td>
+        </tr>
+    {% endfor %}
+</form>
